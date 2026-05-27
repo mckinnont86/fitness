@@ -1,0 +1,1669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="McLifts 2026">
+<title>McLifts — 2026</title>
+<style>
+  :root {
+    --bg: #0A0A0A;
+    --bg2: #111111;
+    --bg3: #1A1A1A;
+    --bg4: #222222;
+    --border: rgba(255,255,255,0.08);
+    --border2: rgba(255,255,255,0.14);
+    --text: #F0F0F0;
+    --text2: #999;
+    --text3: #666;
+    --green: #1DB87A;
+    --green-bg: rgba(29,184,122,0.12);
+    --green-dark: #0D6B47;
+    --blue: #3B8BDB;
+    --blue-bg: rgba(59,139,219,0.12);
+    --orange: #E06030;
+    --orange-bg: rgba(224,96,48,0.12);
+    --purple: #8B7FDD;
+    --purple-bg: rgba(139,127,221,0.12);
+    --amber: #CC8010;
+    --amber-bg: rgba(204,128,16,0.12);
+    --red: #E04040;
+    --red-bg: rgba(224,64,64,0.10);
+    --radius: 10px;
+    --radius-lg: 14px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html, body { background: var(--bg); color: var(--text); font-family: -apple-system, 'SF Pro Text', sans-serif; font-size: 14px; min-height: 100vh; }
+
+  /* HEADER */
+  .app-header { background: var(--bg2); border-bottom: 1px solid var(--border); padding: 16px 16px 12px; position: sticky; top: 0; z-index: 100; }
+  .app-title { font-size: 20px; font-weight: 700; letter-spacing: -0.5px; }
+  .app-title span { color: var(--green); }
+  .app-subtitle { font-size: 12px; color: var(--text3); margin-top: 2px; }
+
+  /* MAIN NAV */
+  .main-nav { display: flex; gap: 6px; padding: 10px 16px; background: var(--bg2); border-bottom: 1px solid var(--border); overflow-x: auto; scrollbar-width: none; }
+  .main-nav::-webkit-scrollbar { display: none; }
+  .main-nav button { flex-shrink: 0; padding: 7px 14px; border-radius: 20px; border: 1px solid var(--border2); background: transparent; color: var(--text2); font-size: 12px; font-weight: 500; cursor: pointer; transition: all .15s; white-space: nowrap; }
+  .main-nav button.active { background: var(--green); color: #000; border-color: var(--green); font-weight: 600; }
+
+  /* SECTIONS */
+  .section { display: none; padding: 12px 16px 100px; }
+  .section.active { display: block; }
+
+  /* PHASE NAV */
+  .phase-scroll { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; margin-bottom: 12px; padding-bottom: 2px; }
+  .phase-scroll::-webkit-scrollbar { display: none; }
+  .phase-btn { flex-shrink: 0; padding: 6px 12px; border-radius: 8px; border: 1px solid var(--border2); background: var(--bg3); color: var(--text2); font-size: 11px; font-weight: 500; cursor: pointer; }
+  .phase-btn.active { background: var(--green-bg); color: var(--green); border-color: var(--green); }
+
+  /* PHASE CARD */
+  .phase-card { background: var(--bg3); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 14px; margin-bottom: 12px; }
+  .phase-card-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+  .phase-name { font-size: 15px; font-weight: 600; color: var(--text); }
+  .phase-dates { font-size: 11px; color: var(--text3); margin-top: 2px; }
+  .phase-load { font-size: 11px; color: var(--text3); margin-top: 2px; }
+  .phase-goal { font-size: 12px; color: var(--text2); margin-top: 8px; line-height: 1.5; }
+  .phase-chips { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 10px; }
+  .chip { font-size: 10px; padding: 3px 8px; border-radius: 6px; font-weight: 500; }
+  .chip-green { background: var(--green-bg); color: var(--green); }
+  .chip-amber { background: var(--amber-bg); color: var(--amber); }
+  .chip-red { background: var(--red-bg); color: var(--red); }
+
+  /* DAY TABS */
+  .day-tabs { display: grid; grid-template-columns: repeat(7, minmax(0,1fr)); gap: 4px; margin-bottom: 12px; }
+  .day-tab { padding: 8px 2px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg3); text-align: center; cursor: pointer; }
+  .day-tab.active { border-color: var(--green); background: var(--green-bg); }
+  .day-tab .dn { font-size: 11px; font-weight: 600; color: var(--text2); }
+  .day-tab.active .dn { color: var(--green); }
+  .day-tab .dt { font-size: 9px; color: var(--text3); margin-top: 2px; }
+  .day-dot { width: 5px; height: 5px; border-radius: 50%; margin: 4px auto 0; }
+
+  /* CONTENT CARD */
+  .content-card { background: var(--bg3); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 14px; }
+
+  /* SECTION HEADS */
+  .sec-head { font-size: 10px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--text3); margin: 14px 0 6px; display: flex; align-items: center; gap: 8px; }
+  .sec-head:first-of-type { margin-top: 0; }
+  .sec-line { flex: 1; height: 1px; background: var(--border); }
+
+  /* EXERCISE ROWS */
+  .ex-row { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 8px; align-items: center; padding: 9px 10px; border-radius: 8px; background: var(--bg4); margin-bottom: 4px; }
+  .ex-row:last-child { margin-bottom: 0; }
+  .ex-name { font-size: 12px; font-weight: 500; color: var(--text); }
+  .ex-sub { font-size: 10px; color: var(--text3); margin-top: 2px; }
+  .ex-right { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+  .ex-sets { font-size: 11px; color: var(--text2); white-space: nowrap; }
+  .badge { font-size: 9px; padding: 2px 7px; border-radius: 5px; font-weight: 600; white-space: nowrap; }
+  .b-green { background: var(--green-bg); color: var(--green); }
+  .b-blue { background: var(--blue-bg); color: var(--blue); }
+  .b-orange { background: var(--orange-bg); color: var(--orange); }
+  .b-purple { background: var(--purple-bg); color: var(--purple); }
+  .b-amber { background: var(--amber-bg); color: var(--amber); }
+  .b-gray { background: rgba(255,255,255,0.06); color: var(--text3); }
+
+  /* CARDIO / RECOVERY ROWS */
+  .c-row { display: flex; gap: 10px; padding: 10px; background: var(--bg4); border-radius: 8px; margin-bottom: 4px; }
+  .c-row:last-child { margin-bottom: 0; }
+  .c-ico { font-size: 18px; flex-shrink: 0; width: 26px; }
+  .c-name { font-size: 12px; font-weight: 500; color: var(--text); }
+  .c-desc { font-size: 11px; color: var(--text2); margin-top: 2px; line-height: 1.4; }
+  .c-dur { font-size: 10px; color: var(--text3); margin-top: 4px; }
+
+  /* NOTE BOX */
+  .note-box { margin-top: 12px; padding: 10px 12px; border-left: 2px solid var(--border2); font-size: 11px; color: var(--text3); line-height: 1.6; border-radius: 0 8px 8px 0; background: var(--bg4); }
+
+  /* ALERT */
+  .alert { padding: 9px 12px; border-radius: 8px; font-size: 11px; line-height: 1.5; margin-bottom: 10px; }
+  .alert-green { background: var(--green-bg); color: #5FE0A8; }
+  .alert-purple { background: var(--purple-bg); color: var(--purple); }
+  .alert-amber { background: var(--amber-bg); color: var(--amber); }
+  .alert-gray { background: var(--bg4); color: var(--text2); }
+
+  /* TIMING CHIPS */
+  .t-chips { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 10px; }
+  .t-chip { font-size: 10px; padding: 4px 9px; border-radius: 6px; background: var(--bg4); border: 1px solid var(--border); color: var(--text2); }
+
+  /* SCHEME BAR */
+  .scheme-row { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 10px; }
+
+  /* SEASON INLINE TAG */
+  .in-season-alert { padding: 10px 12px; background: var(--red-bg); border-radius: 8px; font-size: 11px; color: #FF8080; margin-bottom: 10px; line-height: 1.5; }
+
+  /* EMPTY */
+  .empty { text-align: center; padding: 30px; color: var(--text3); font-size: 13px; }
+
+  /* UNI DOT */
+  .u-dot { display: inline-block; width: 5px; height: 5px; border-radius: 50%; background: var(--amber); margin-right: 4px; vertical-align: middle; }
+
+  /* RUN BLOCK */
+  .run-block { margin-top: 12px; border: 1px solid rgba(59,139,219,0.3); border-radius: 10px; overflow: hidden; }
+  .run-header { display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; background: rgba(59,139,219,0.10); cursor: pointer; user-select: none; }
+  .run-header-left { display: flex; align-items: center; gap: 8px; }
+  .run-title { font-size: 12px; font-weight: 600; color: #5BA8F0; }
+  .run-optional { font-size: 10px; color: var(--text3); }
+  .run-toggle { font-size: 12px; color: var(--text3); transition: transform .2s; }
+  .run-toggle.open { transform: rotate(180deg); }
+  .run-body { display: none; padding: 10px 12px; border-top: 1px solid rgba(59,139,219,0.2); }
+  .run-body.open { display: block; }
+  .run-row { display: flex; justify-content: space-between; align-items: flex-start; padding: 7px 0; border-bottom: 1px solid var(--border); }
+  .run-row:last-child { border-bottom: none; padding-bottom: 0; }
+  .run-day-label { font-size: 11px; font-weight: 500; color: var(--text2); min-width: 70px; }
+  .run-dist { font-size: 13px; font-weight: 600; color: #5BA8F0; white-space: nowrap; }
+  .run-note { font-size: 11px; color: var(--text3); text-align: right; }
+  .run-xc-note { font-size: 11px; color: var(--text3); margin-top: 8px; padding: 7px 10px; background: var(--bg4); border-radius: 6px; line-height: 1.5; }
+
+  .img-modal-bg { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:999; align-items:center; justify-content:center; padding:20px; }
+  .img-modal-bg.open { display:flex; }
+  .img-modal { background:var(--bg2); border:1px solid var(--border2); border-radius:16px; padding:20px; max-width:380px; width:100%; position:relative; }
+  .img-modal-title { font-size:14px; font-weight:600; color:var(--text); margin-bottom:4px; padding-right:32px; }
+  .img-modal-tag { font-size:11px; color:var(--text3); margin-bottom:14px; }
+  .img-modal-img { width:100%; border-radius:10px; background:var(--bg3); min-height:200px; display:flex; align-items:center; justify-content:center; overflow:hidden; }
+  .img-modal-img img { width:100%; border-radius:10px; display:block; }
+  .img-modal-img .img-loading { color:var(--text3); font-size:12px; padding:40px; text-align:center; }
+  .img-modal-img .img-error { color:var(--text3); font-size:12px; padding:30px; text-align:center; line-height:1.6; }
+  .img-modal-desc { font-size:11px; color:var(--text2); margin-top:12px; line-height:1.6; }
+  .img-modal-close { position:absolute; top:14px; right:14px; background:var(--bg4); border:none; color:var(--text2); font-size:18px; width:28px; height:28px; border-radius:50%; cursor:pointer; display:flex; align-items:center; justify-content:center; line-height:1; }
+  .img-btn { display:inline-flex; align-items:center; gap:4px; font-size:10px; padding:2px 7px; border-radius:5px; background:rgba(59,139,219,0.15); color:#5BA8F0; border:none; cursor:pointer; margin-left:6px; font-weight:600; vertical-align:middle; }
+  .b-teal { background:rgba(29,184,122,0.1); color:#1DB87A; }
+
+  /* DAY CHECKBOX */
+  .day-check-bar { margin-top: 12px; display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; background: var(--bg3); border: 1px solid var(--border); border-radius: 10px; cursor: pointer; -webkit-tap-highlight-color: transparent; user-select: none; }
+  .day-check-bar.checked { background: rgba(29,184,122,0.1); border-color: rgba(29,184,122,0.4); }
+  .day-check-left { display: flex; align-items: center; gap: 10px; }
+  .day-check-box { width: 22px; height: 22px; border-radius: 6px; border: 1.5px solid var(--border2); background: var(--bg4); display: flex; align-items: center; justify-content: center; font-size: 14px; color: transparent; flex-shrink: 0; transition: background .12s, border-color .12s; }
+  .day-check-bar.checked .day-check-box { background: #1DB87A; border-color: #0F6E56; color: #04342C; }
+  .day-check-label { font-size: 12px; font-weight: 500; color: var(--text2); }
+  .day-check-bar.checked .day-check-label { color: #1DB87A; }
+  .day-check-streak { display: flex; gap: 3px; align-items: center; }
+  .dcs-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--border2); }
+  .dcs-dot.lit { background: #1DB87A; }
+  .day-check-week { font-size: 10px; color: var(--text3); }
+
+  /* PROGRESS TAB */
+  .prog-stats { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 8px; margin-bottom: 1rem; }
+  .prog-stat { background: var(--bg3); border-radius: 10px; padding: 10px 12px; }
+  .prog-stat-val { font-size: 22px; font-weight: 600; color: var(--green); }
+  .prog-stat-lbl { font-size: 11px; color: var(--text3); margin-top: 2px; }
+  .prog-bar-wrap { height: 5px; background: var(--border); border-radius: 3px; margin-bottom: 1.25rem; overflow: hidden; }
+  .prog-bar-fill { height: 100%; background: var(--green); border-radius: 3px; transition: width .4s; }
+  .prog-phase-block { margin-bottom: 1rem; }
+  .prog-phase-head { font-size: 11px; font-weight: 500; letter-spacing: .05em; text-transform: uppercase; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center; }
+  .prog-phase-ct { font-size: 10px; color: var(--text3); font-weight: 400; letter-spacing: 0; text-transform: none; }
+  .prog-week-grid { display: grid; grid-template-columns: repeat(6, minmax(0,1fr)); gap: 5px; }
+  .prog-wk { aspect-ratio: 1; border-radius: 8px; border: 0.5px solid var(--border); background: var(--bg3); display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; -webkit-tap-highlight-color: transparent; transition: background .1s, border-color .1s; }
+  .prog-wk:active { transform: scale(0.91); }
+  .prog-wk.done { background: var(--green); border-color: #0F6E56; }
+  .prog-wk.cur { border: 2px solid var(--green); }
+  .prog-wk-num { font-size: 11px; font-weight: 500; color: var(--text2); }
+  .prog-wk.done .prog-wk-num { color: #04342C; }
+  .prog-wk-chk { font-size: 13px; color: #04342C; display: none; }
+  .prog-wk.done .prog-wk-chk { display: block; }
+  .prog-wk.done .prog-wk-num { display: none; }
+  .prog-wk-date { font-size: 9px; color: var(--text3); margin-top: 1px; }
+  .prog-wk.done .prog-wk-date { color: #085041; }
+  .prog-reset { margin-top: 1rem; text-align: center; }
+  .prog-reset-btn { font-size: 11px; color: var(--text3); background: none; border: 0.5px solid var(--border); border-radius: 6px; padding: 5px 14px; cursor: pointer; }
+  .prog-legend { display: flex; gap: 12px; margin-bottom: 1rem; flex-wrap: wrap; }
+  .prog-leg { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--text3); }
+  .prog-leg-dot { width: 10px; height: 10px; border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<div class="app-header">
+  <div class="app-title">Mc<span>Lifts</span> — 2026</div>
+  <div class="app-subtitle">June – November · Advanced wrestling athlete</div>
+</div>
+
+<div class="main-nav" id="mainNav">
+  <button onclick="switchSection('progress')">Progress</button>
+  <button class="active" onclick="switchSection('schedule')">Schedule</button>
+  <button onclick="switchSection('lifting')">Lifting</button>
+  <button onclick="switchSection('explosive')">Explosive</button>
+  <button onclick="switchSection('cardio')">Cardio</button>
+  <button onclick="switchSection('stretch')">Stretching</button>
+  <button onclick="switchSection('ankle')">Ankle prehab</button>
+  <button onclick="switchSection('shoulder')">Shoulder prehab</button>
+  <button onclick="switchSection('hip')">Hip prehab</button>
+  <button onclick="switchSection('landmine')">Landmine guide</button>
+</div>
+
+<!-- ===================== PROGRESS ===================== -->
+<div class="section" id="sec-progress">
+  <div id="progressContent"></div>
+</div>
+
+<!-- ===================== SCHEDULE ===================== -->
+<div class="section active" id="sec-schedule">
+  <div class="phase-scroll" id="phaseNav"></div>
+  <div id="phaseInfo"></div>
+  <div class="day-tabs" id="scheduleDays"></div>
+  <div class="content-card" id="scheduleContent"></div>
+</div>
+
+<!-- ===================== LIFTING ===================== -->
+<div class="section" id="sec-lifting">
+  <div class="phase-scroll" id="liftPhaseNav"></div>
+  <div class="day-tabs" id="liftDayTabs"></div>
+  <div class="content-card" id="liftContent"></div>
+</div>
+
+<!-- ===================== EXPLOSIVE ===================== -->
+<div class="section" id="sec-explosive">
+  <div class="day-tabs" id="exploDays"></div>
+  <div class="content-card" id="exploContent"></div>
+</div>
+
+<!-- ===================== CARDIO ===================== -->
+<div class="section" id="sec-cardio">
+  <div class="content-card" id="cardioContent"></div>
+</div>
+
+<!-- ===================== STRETCHING ===================== -->
+<div class="section" id="sec-stretch">
+  <div class="day-tabs" id="stretchDays"></div>
+  <div class="content-card" id="stretchContent"></div>
+</div>
+
+<!-- ===================== ANKLE ===================== -->
+<div class="section" id="sec-ankle">
+  <div class="content-card" id="ankleContent"></div>
+</div>
+
+<!-- ===================== SHOULDER ===================== -->
+<div class="section" id="sec-shoulder">
+  <div class="day-tabs" id="shoulderDays"></div>
+  <div class="content-card" id="shoulderContent"></div>
+</div>
+
+<!-- ===================== HIP ===================== -->
+<div class="section" id="sec-hip">
+  <div class="content-card" id="hipContent"></div>
+</div>
+
+<!-- ===================== LANDMINE ===================== -->
+<div class="section" id="sec-landmine">
+  <div class="content-card" id="landmineContent"></div>
+</div>
+
+<!-- IMAGE MODAL -->
+<div class="img-modal-bg" id="imgModalBg" onclick="closeImgModal(event)">
+  <div class="img-modal">
+    <button class="img-modal-close" onclick="closeModal()">✕</button>
+    <div class="img-modal-title" id="imgModalTitle"></div>
+    <div class="img-modal-tag" id="imgModalTag"></div>
+    <div class="img-modal-img" id="imgModalImg"></div>
+    <div class="img-modal-desc" id="imgModalDesc"></div>
+  </div>
+</div>
+
+<script>
+const PHASES=[
+  {id:'base',name:'Phase 1 — Base building',dates:'June 2 – June 22',weeks:'Wks 1–3',load:'50–60% 1RM · Low intensity',goal:'Rebuild work capacity after school year. High volume, moderate loads, technique focus. No max efforts.',chips:[{t:'3×10–12 main',c:'chip-green'},{t:'3×15 unilateral',c:'chip-amber'},{t:'2×20 core',c:'chip-amber'}],scheme:{main:'3×10',uni:'3×15',acc:'3×12',core:'2×20'}},
+  {id:'hyp',name:'Phase 2 — Hypertrophy',dates:'June 23 – Aug 3',weeks:'Wks 4–9',load:'65–72% 1RM · Moderate',goal:'Drive muscle mass for weight class durability. Push close to failure on last sets of accessories.',chips:[{t:'4×8 main',c:'chip-green'},{t:'4×10–12 unilateral',c:'chip-amber'},{t:'3×15 acc',c:'chip-amber'}],scheme:{main:'4×8',uni:'4×10',acc:'3×12',core:'3×15'}},
+  {id:'str',name:'Phase 3 — Strength',dates:'Aug 4 – Sept 20',weeks:'Wks 10–16',load:'78–85% 1RM · High',goal:'Peak force production. Heavy compounds, full rest, progressive overload weekly. This feeds the explosive days.',chips:[{t:'5×5 main',c:'chip-green'},{t:'3×8 unilateral',c:'chip-amber'},{t:'3×6–8 acc',c:'chip-amber'}],scheme:{main:'5×5',uni:'3×8',acc:'3×6',core:'3×10'}},
+  {id:'peak',name:'Phase 4 — Peaking',dates:'Sept 21 – Oct 4',weeks:'Wks 17–18',load:'85–90% 1RM · Very high',goal:'Reduce volume, hold intensity. Body consolidates strength gains. Explosive days dominate.',chips:[{t:'3×3 main',c:'chip-green'},{t:'2×6 unilateral',c:'chip-amber'},{t:'Daily core circuit',c:'chip-amber'}],scheme:{main:'3×3',uni:'2×6',acc:'2×5',core:'daily'}},
+  {id:'pre',name:'Phase 5 — Preseason',dates:'Oct 5 – Oct 18',weeks:'Wks 19–20',load:'75–80% 1RM · Moderate',goal:'XC and wrestling practice in full swing. Lifting is pure maintenance — 2×/week max. Practice drives all conditioning.',chips:[{t:'2×5 main (maint.)',c:'chip-green'},{t:'2×8 unilateral',c:'chip-amber'},{t:'Post-practice only',c:'chip-red'}],scheme:{main:'2×5',uni:'2×8',acc:'2×8',core:'post-practice'}},
+  {id:'early',name:'Phase 6 — Early season',dates:'Oct 19 – Nov 9',weeks:'Wks 21–23',load:'70–75% 1RM · Low–moderate',goal:'Competition begins. Lifting 1–2×/week. Recovery becomes the primary training variable.',chips:[{t:'2×5 main (maint.)',c:'chip-green'},{t:'1×8 unilateral',c:'chip-amber'},{t:'Recovery priority',c:'chip-red'}],scheme:{main:'2×5',uni:'2×8',acc:'2×8',core:'mobility'}},
+  {id:'in',name:'Phase 7 — In-season',dates:'Nov 10 – ongoing',weeks:'Wks 24+',load:'75–80% 1RM · Low vol / high intent',goal:'Compete, recover, stay sharp. One brief lifting session max per week. Sleep and nutrition are training.',chips:[{t:'1×5 main (keep sharp)',c:'chip-green'},{t:'1×6 unilateral',c:'chip-amber'},{t:'Match schedule governs',c:'chip-red'}],scheme:{main:'1×5',uni:'1×6',acc:'1×8',core:'mobility'}},
+];
+
+const WEEK_DAYS=[
+  {name:'Mon',tag:'Lift A',type:'lift',dot:'#1DB87A'},
+  {name:'Tue',tag:'Explosive',type:'explo',dot:'#E06030'},
+  {name:'Wed',tag:'Lift B',type:'lift',dot:'#1DB87A'},
+  {name:'Thu',tag:'Cardio',type:'cardio',dot:'#3B8BDB'},
+  {name:'Fri',tag:'Lift C',type:'lift',dot:'#1DB87A'},
+  {name:'Sat',tag:'Power',type:'explo',dot:'#E06030'},
+  {name:'Sun',tag:'Recovery',type:'rest',dot:'#666'},
+];
+
+const DAY_DESCRIPTIONS={
+  0:{type:'lift',title:'Monday — Full body A',note:'XC in AM, lift afternoon. Main lifts 90–120s rest, accessories 60s.'},
+  1:{type:'explo',title:'Tuesday — Explosive / Plyo',note:'Rest fully between explosive sets (2–3 min). Speed over fatigue.'},
+  2:{type:'lift',title:'Wednesday — Full body B',note:'Heaviest pull day. Trap bar deadlift is the anchor.'},
+  3:{type:'cardio',title:'Thursday — Cardio',note:'Choose 1–2 modalities based on recovery. Sprints first priority.'},
+  4:{type:'lift',title:'Friday — Full body C',note:'End of lifting week. Higher-rep endurance block builds lactate tolerance.'},
+  5:{type:'explo',title:'Saturday — Power complex',note:'Treat each block as a 2-min wrestling period.'},
+  6:{type:'rest',title:'Sunday — Recovery',note:'No training stress. This is where the week\'s work becomes fitness.'},
+};
+
+const LIFT_A={
+  sections:[
+    {label:'Primary compound lifts',rows:[
+      {n:'Back squat',badge:'Bilateral',bc:'b-green',rep:'main',uni:false},
+      {n:'Barbell bench press',badge:'Push',bc:'b-blue',rep:'main',uni:false},
+      {n:'Barbell row (pronated)',badge:'Pull',bc:'b-orange',rep:'main',uni:false},
+    ]},
+    {label:'Unilateral block',rows:[
+      {n:'Bulgarian split squat',badge:'Unilateral',bc:'b-amber',rep:'uni',uni:true},
+      {n:'Single-arm dumbbell row',badge:'Unilateral',bc:'b-amber',rep:'uni',uni:true},
+      {n:'Single-leg hip thrust',badge:'Unilateral',bc:'b-amber',rep:'uni',uni:true},
+      {n:'Step-up with knee drive',badge:'Unilateral',bc:'b-amber',rep:'uni',uni:true},
+    ]},
+    {label:'Landmine block',rows:[
+      {n:'Landmine squat (two-hand)',badge:'Bilateral',bc:'b-green',rep:'acc',uni:false},
+      {n:'Landmine anti-rotation press',badge:'Core',bc:'b-gray',rep:'acc',uni:true},
+      {n:'Landmine row (single-arm)',badge:'Pull',bc:'b-orange',rep:'acc',uni:true},
+    ]},
+    {label:'Accessories',rows:[
+      {n:'Dumbbell incline press',badge:'Push',bc:'b-blue',rep:'acc',uni:false},
+      {n:'Face pull (cable)',badge:'Pull',bc:'b-orange',rep:'acc',uni:false},
+      {n:'Triceps pushdown',badge:'Push',bc:'b-blue',rep:'acc',uni:false},
+    ]},
+    {label:'Core',rows:[
+      {n:'Ab wheel rollout',badge:'Core',bc:'b-gray',rep:'core',uni:false},
+      {n:'Dead bug',badge:'Core',bc:'b-gray',rep:'core',uni:false},
+      {n:'Copenhagen plank hold',badge:'Core',bc:'b-gray',rep:'core',uni:true},
+    ]},
+  ]
+};
+
+const LIFT_B={
+  sections:[
+    {label:'Primary compound lifts',rows:[
+      {n:'Trap bar deadlift',badge:'Bilateral',bc:'b-green',rep:'main',uni:false},
+      {n:'Weighted pull-up',badge:'Pull',bc:'b-orange',rep:'main',uni:false},
+      {n:'Push press (overhead)',badge:'Push',bc:'b-blue',rep:'main',uni:false},
+    ]},
+    {label:'Unilateral block',rows:[
+      {n:'Single-leg RDL (barbell or DB)',badge:'Unilateral',bc:'b-amber',rep:'uni',uni:true},
+      {n:'Reverse lunge (front-rack)',badge:'Unilateral',bc:'b-amber',rep:'uni',uni:true},
+      {n:'Landmine press (single-arm, standing)',badge:'Unilateral',bc:'b-amber',rep:'uni',uni:true},
+      {n:'Single-leg leg press',badge:'Unilateral',bc:'b-amber',rep:'uni',uni:true},
+    ]},
+    {label:'Landmine block',rows:[
+      {n:'Landmine deadlift (sumo stance)',badge:'Bilateral',bc:'b-green',rep:'acc',uni:false},
+      {n:'Landmine rotation (Meadows twist)',badge:'Core',bc:'b-gray',rep:'acc',uni:true},
+      {n:'Landmine split-stance press',badge:'Push',bc:'b-blue',rep:'acc',uni:true},
+      {n:'Landmine high pull (single-arm)',badge:'Pull',bc:'b-orange',rep:'acc',uni:true},
+    ]},
+    {label:'Accessories',rows:[
+      {n:'Chest-supported DB row',badge:'Pull',bc:'b-orange',rep:'acc',uni:false},
+      {n:'Romanian deadlift',badge:'Bilateral',bc:'b-green',rep:'acc',uni:false},
+      {n:'Neutral-grip chin-up (slow eccentric)',badge:'Pull',bc:'b-orange',rep:'acc',uni:false},
+    ]},
+    {label:'Core — anti-rotation',rows:[
+      {n:'Pallof press',badge:'Core',bc:'b-gray',rep:'core',uni:true},
+      {n:'Suitcase carry',badge:'Core',bc:'b-gray',rep:'core',uni:true},
+      {n:'GHD sit-up',badge:'Core',bc:'b-gray',rep:'core',uni:false},
+    ]},
+  ]
+};
+
+const LIFT_C={
+  sections:[
+    {label:'Primary compound lifts',rows:[
+      {n:'Front squat',badge:'Bilateral',bc:'b-green',rep:'main',uni:false},
+      {n:'Incline barbell press',badge:'Push',bc:'b-blue',rep:'main',uni:false},
+      {n:'Chest-supported barbell row',badge:'Pull',bc:'b-orange',rep:'main',uni:false},
+    ]},
+    {label:'Unilateral block',rows:[
+      {n:'Pistol squat or skater squat',badge:'Unilateral',bc:'b-amber',rep:'uni',uni:true},
+      {n:'Dumbbell split press (kneeling)',badge:'Unilateral',bc:'b-amber',rep:'uni',uni:true},
+      {n:'Single-arm cable row',badge:'Unilateral',bc:'b-amber',rep:'uni',uni:true},
+      {n:'Lateral lunge (dumbbell)',badge:'Unilateral',bc:'b-amber',rep:'uni',uni:true},
+    ]},
+    {label:'Landmine block',rows:[
+      {n:'Landmine 180 (rotational slam)',badge:'Core',bc:'b-gray',rep:'acc',uni:true},
+      {n:'Landmine squat to press (single-arm)',badge:'Push',bc:'b-blue',rep:'acc',uni:true},
+      {n:'Landmine RDL to row combo',badge:'Pull',bc:'b-orange',rep:'acc',uni:true},
+      {n:'Landmine lateral lunge',badge:'Unilateral',bc:'b-amber',rep:'acc',uni:true},
+    ]},
+    {label:'Strength-endurance block',rows:[
+      {n:'Goblet squat',badge:'Bilateral',bc:'b-green',rep:'acc',uni:false},
+      {n:'Push-up (weighted or archer)',badge:'Push',bc:'b-blue',rep:'acc',uni:false},
+      {n:'TRX or ring row',badge:'Pull',bc:'b-orange',rep:'acc',uni:false},
+    ]},
+    {label:'Core finisher',rows:[
+      {n:'Hanging leg raise',badge:'Core',bc:'b-gray',rep:'core',uni:false},
+      {n:'Plank to push-up',badge:'Core',bc:'b-gray',rep:'core',uni:false},
+      {n:'Farmer carry (heavy)',badge:'Core',bc:'b-gray',rep:'core',uni:false},
+    ]},
+  ]
+};
+
+// P6 & P7 — 6 exercises per day, full legs (bilateral + unilateral), day-specific rep focus
+// Monday = hypertrophy, Wednesday = endurance, Friday = strength
+const LEAN_SCHEMES={
+  hyp: {main:'4×8', uni:'3×10',acc:'3×12',core:'3×15', label:'Hypertrophy — 4×8 main · 3×10 uni · 60–75s rest'},
+  end: {main:'3×15',uni:'3×15',acc:'3×20',core:'3×20', label:'Endurance — 3×15–20 · 45–60s rest · lactate threshold'},
+  str: {main:'4×5', uni:'3×6', acc:'3×6', core:'3×8',  label:'Strength — 4×5 main · 3×6 uni · 2–3 min rest'},
+};
+// P7 overrides — heavier 3–4 reps on bilateral + unilateral, core/landmine unchanged
+const P7_SCHEMES={
+  hyp: {main:'4×3', uni:'3×4', acc:'3×12',core:'3×15', label:'P7 Monday — Heavy (3–4 reps) · core/landmine normal · 2–3 min rest'},
+  end: {main:'4×4', uni:'3×4', acc:'3×20',core:'3×20', label:'P7 Wednesday — Heavy (4 reps) · endurance core · 2 min rest'},
+  str: {main:'4×3', uni:'3×3', acc:'3×6', core:'3×8',  label:'P7 Friday — Max strength (3 reps) · brief · full rest'},
+};
+
+const LEAN_A={
+  label:'Monday — Hypertrophy',
+  schemeKey:'hyp',
+  note:'Hypertrophy focus — moderate load, controlled tempo, 60–75s rest. Bilateral squat + single-leg hip thrust covers both leg patterns without excessive CNS demand.',
+  sections:[
+    {label:'Bilateral lower',rows:[
+      {n:'Back squat',badge:'Bilateral',bc:'b-green',rep:'main',uni:false},
+    ]},
+    {label:'Unilateral lower',rows:[
+      {n:'Single-leg hip thrust',badge:'Unilateral',bc:'b-amber',rep:'uni',uni:true},
+    ]},
+    {label:'Upper push / pull',rows:[
+      {n:'Barbell bench press',badge:'Push',bc:'b-blue',rep:'main',uni:false},
+      {n:'Barbell row (pronated)',badge:'Pull',bc:'b-orange',rep:'main',uni:false},
+    ]},
+    {label:'Landmine + core',rows:[
+      {n:'Landmine anti-rotation press',badge:'Core',bc:'b-gray',rep:'acc',uni:true},
+      {n:'Ab wheel rollout',badge:'Core',bc:'b-gray',rep:'core',uni:false},
+    ]},
+  ]
+};
+
+const LEAN_B={
+  label:'Wednesday — Endurance',
+  schemeKey:'end',
+  note:'Endurance focus — higher reps, shorter rest, builds lactate tolerance for wrestling periods. Trap bar RDL keeps posterior chain loaded without heavy CNS cost.',
+  sections:[
+    {label:'Bilateral lower',rows:[
+      {n:'Romanian deadlift',badge:'Bilateral',bc:'b-green',rep:'main',uni:false},
+    ]},
+    {label:'Unilateral lower',rows:[
+      {n:'Bulgarian split squat',badge:'Unilateral',bc:'b-amber',rep:'uni',uni:true},
+    ]},
+    {label:'Upper push / pull',rows:[
+      {n:'Push press (overhead)',badge:'Push',bc:'b-blue',rep:'main',uni:false},
+      {n:'Weighted pull-up',badge:'Pull',bc:'b-orange',rep:'main',uni:false},
+    ]},
+    {label:'Landmine + core',rows:[
+      {n:'Landmine rotation (Meadows twist)',badge:'Core',bc:'b-gray',rep:'acc',uni:true},
+      {n:'Pallof press',badge:'Core',bc:'b-gray',rep:'core',uni:true},
+    ]},
+  ]
+};
+
+const LEAN_C={
+  label:'Friday — Strength',
+  schemeKey:'str',
+  note:'Strength focus — heavy and brief. 4×5 front squat + reverse lunge keeps leg strength sharp without digging a hole before Saturday. Full 2–3 min rest between main sets.',
+  sections:[
+    {label:'Bilateral lower',rows:[
+      {n:'Front squat',badge:'Bilateral',bc:'b-green',rep:'main',uni:false},
+    ]},
+    {label:'Unilateral lower',rows:[
+      {n:'Reverse lunge (front-rack)',badge:'Unilateral',bc:'b-amber',rep:'uni',uni:true},
+    ]},
+    {label:'Upper push / pull',rows:[
+      {n:'Incline barbell press',badge:'Push',bc:'b-blue',rep:'main',uni:false},
+      {n:'Chest-supported barbell row',badge:'Pull',bc:'b-orange',rep:'main',uni:false},
+    ]},
+    {label:'Landmine + core',rows:[
+      {n:'Landmine squat to press (single-arm)',badge:'Push',bc:'b-blue',rep:'acc',uni:true},
+      {n:'Hanging leg raise',badge:'Core',bc:'b-gray',rep:'core',uni:false},
+    ]},
+  ]
+};
+
+const EXPLO_TUE=[
+  {ico:'⚡',n:'Broad jump',d:'4×5 — max distance each rep. Soft landing, absorb through hips and knees.',dur:'Neural activation'},
+  {ico:'⚡',n:'Lateral hurdle hop',d:'3×8 / side — quick ground contact, stay on balls of feet.',dur:'Neural activation'},
+  {ico:'⚡',n:'Reactive drop step',d:'3×6 / side — rapid direction change off a drop cue.',dur:'Neural activation'},
+  {ico:'💣',n:'Rotational med ball wall throw',d:'4×6 / side — load the hip, rotate explosively, release.',dur:'Med ball complex'},
+  {ico:'💣',n:'Med ball overhead slam',d:'4×8 — full extension overhead, slam with max force.',dur:'Med ball complex'},
+  {ico:'💣',n:'Med ball chest pass jump',d:'3×6 — squat, jump, and pass simultaneously.',dur:'Med ball complex'},
+  {ico:'🤼',n:'Resisted level change drill',d:'5×5 — partner or band resistance on the level change. Drive through the hip.',dur:'Wrestling drills'},
+  {ico:'🤼',n:'Sprawl to base (explosive)',d:'5×6 — snap hips down hard on the sprawl, explode back to base.',dur:'Wrestling drills'},
+  {ico:'🤼',n:'Sandbag shouldering',d:'4×5 / side — pick up and load to one shoulder explosively.',dur:'Wrestling drills'},
+  {ico:'📦',n:'Box jump (max height)',d:'4×4 — full hip extension at takeoff. Step down, never jump down.',dur:'Box jumps'},
+  {ico:'📦',n:'Single-leg box jump',d:'3×4 / side — single-leg takeoff, land two feet. Control the landing.',dur:'Box jumps'},
+  {ico:'📦',n:'Depth drop to broad jump',d:'3×5 — step off box, absorb, immediately broad jump. Minimize ground contact time.',dur:'Box jumps'},
+];
+
+const EXPLO_SAT=[
+  {ico:'🏋️',n:'Power clean',d:'5×3 — bar from floor, explosive pull, catch in quarter squat. Full hip extension.',dur:'Barbell complex'},
+  {ico:'🏋️',n:'Hang snatch or high pull',d:'4×3 — from hang position, explosive shrug and pull or catch overhead.',dur:'Barbell complex'},
+  {ico:'🏋️',n:'Push jerk',d:'4×3 — dip, drive, drop under bar. Lock out overhead. 3 min rest between sets.',dur:'Barbell complex'},
+  {ico:'💥',n:'Landmine clean (single-arm)',d:'4×4 / side — hip hinge start, explosive pull, catch at shoulder.',dur:'Landmine power'},
+  {ico:'💥',n:'Landmine rotational press (full power)',d:'4×6 / side — rotate through hips, transfer force from ground into the press.',dur:'Landmine power'},
+  {ico:'💥',n:'Landmine full-contact twist',d:'3×8 / side — explosive rotation, bar from hip to hip. Drive from hips.',dur:'Landmine power'},
+  {ico:'⚡',n:'Depth drop to broad jump',d:'3×5 — step off box, minimal ground contact, immediately broad jump.',dur:'Plyo circuit'},
+  {ico:'⚡',n:'Single-leg box jump',d:'3×4 / side — single-leg takeoff, two-foot landing, stick it.',dur:'Plyo circuit'},
+  {ico:'⚡',n:'Reactive shuffle and 10m sprint',d:'3×6 — lateral shuffle on cue, explode into 10m sprint.',dur:'Plyo circuit'},
+  {ico:'🪨',n:'Yoke or barbell carry',d:'4×30m — heavy as possible with good posture. Builds clinch strength.',dur:'Loaded carries'},
+  {ico:'🪨',n:'Sandbag shouldering and walk',d:'3×20m — shoulder the bag, walk with it. Simulates wrestling body control.',dur:'Loaded carries'},
+  {ico:'🤼',n:'Match simulation drilling',d:'5 rounds × 2 min partner drilling + 30s rest — mirrors real match rest periods.',dur:'Match sim'},
+];
+
+// Battle ropes — phase-specific rotations
+// Constants per session marked with * in note — always kept regardless of phase
+// Tue constants: alternating waves (conditioning anchor) + power slam (max force anchor)
+// Sat constants: double wave (bilateral anchor) + grappler toss (wrestling anchor)
+const BATTLE_ROPES = {
+  //           [constant1,          constant2,           rotating variation]
+  base: {
+    tue: [
+      {ico:'🔄',n:'Battle rope alternating waves',    d:'4×30s on / 30s rest — build the pattern. Focus on full arm extension and hip drive. ★ constant',dur:'Battle ropes'},
+      {ico:'🔄',n:'Battle rope power slam',            d:'3×8 — overhead raise, slam down with max force. Reset fully each rep. ★ constant',dur:'Battle ropes'},
+      {ico:'🔄',n:'Battle rope outside circles',       d:'3×20s / dir — make large outward circles with both ropes. Shoulder and rotator cuff warm-up.',dur:'Battle ropes'},
+    ],
+    sat: [
+      {ico:'🔄',n:'Battle rope double wave',           d:'4×30s on / 30s rest — both ropes together. Athletic stance, drive from hips. ★ constant',dur:'Battle ropes'},
+      {ico:'🔄',n:'Battle rope grappler toss',         d:'3×8 / side — rotate and slam both ropes to one side. Hip pivot, wrestling throw pattern. ★ constant',dur:'Battle ropes'},
+      {ico:'🔄',n:'Battle rope lateral shuffle wave',  d:'3×20s — lateral shuffle while maintaining alternating waves. Foot speed + arm endurance.',dur:'Battle ropes'},
+    ],
+  },
+  hyp: {
+    tue: [
+      {ico:'🔄',n:'Battle rope alternating waves',    d:'5×30s on / 30s rest — increase volume from P1. Drive harder from the hips. ★ constant',dur:'Battle ropes'},
+      {ico:'🔄',n:'Battle rope power slam',            d:'4×10 — full reset between reps. Max force output. ★ constant',dur:'Battle ropes'},
+      {ico:'🔄',n:'Battle rope lateral slam',          d:'4×20s — slam both ropes to each side alternately. Rotate through the core.',dur:'Battle ropes'},
+    ],
+    sat: [
+      {ico:'🔄',n:'Battle rope double wave',           d:'5×30s on / 30s rest — volume increase. Stay in stance the full 30s. ★ constant',dur:'Battle ropes'},
+      {ico:'🔄',n:'Battle rope grappler toss',         d:'4×10 / side — full hip rotation each rep. Build explosiveness. ★ constant',dur:'Battle ropes'},
+      {ico:'🔄',n:'Battle rope squat to wave',         d:'4×20s — squat down, explode up and wave simultaneously. Lower body drives the ropes.',dur:'Battle ropes'},
+    ],
+  },
+  str: {
+    tue: [
+      {ico:'🔄',n:'Battle rope alternating waves',    d:'5×30s on / 30s rest — maintain intensity throughout. ★ constant',dur:'Battle ropes'},
+      {ico:'🔄',n:'Battle rope power slam',            d:'4×10 — treat like a lift. Full hip extension, max force. ★ constant',dur:'Battle ropes'},
+      {ico:'🔄',n:'Battle rope sprint',               d:'4×15s all-out / 45s rest — absolute max speed alternating waves. Pure power output.',dur:'Battle ropes'},
+    ],
+    sat: [
+      {ico:'🔄',n:'Battle rope double wave',           d:'5×30s on / 30s rest — peak volume phase. Hold wattage across all 5 sets. ★ constant',dur:'Battle ropes'},
+      {ico:'🔄',n:'Battle rope grappler toss',         d:'4×10 / side — maximum rotation and power. ★ constant',dur:'Battle ropes'},
+      {ico:'🔄',n:'Battle rope jump slam',             d:'4×8 — jump and slam both ropes on landing. Explosive triple extension into the ropes.',dur:'Battle ropes'},
+    ],
+  },
+  peak: {
+    tue: [
+      {ico:'🔄',n:'Battle rope alternating waves',    d:'4×20s on / 40s rest — quality over quantity. CNS is peaking, keep rest full. ★ constant',dur:'Battle ropes'},
+      {ico:'🔄',n:'Battle rope power slam',            d:'3×6 — max force, full reset. Heavy intent. ★ constant',dur:'Battle ropes'},
+      {ico:'🔄',n:'Battle rope single-arm wave',       d:'3×15s / side — one rope, one arm. Unilateral demand, shoulder stability.',dur:'Battle ropes'},
+    ],
+    sat: [
+      {ico:'🔄',n:'Battle rope double wave',           d:'4×20s on / 40s rest — taper volume, keep intensity. ★ constant',dur:'Battle ropes'},
+      {ico:'🔄',n:'Battle rope grappler toss',         d:'3×8 / side — maximum intent each rep. ★ constant',dur:'Battle ropes'},
+      {ico:'🔄',n:'Battle rope rotational slam',       d:'3×6 / side — stand sideways, slam ropes laterally with full hip rotation. Match intensity.',dur:'Battle ropes'},
+    ],
+  },
+  pre: {
+    tue: [
+      {ico:'🔄',n:'Battle rope alternating waves',    d:'3×30s on / 30s rest — maintenance. Practice is the primary load now. ★ constant',dur:'Battle ropes'},
+      {ico:'🔄',n:'Battle rope power slam',            d:'3×8 — keep the explosive pattern sharp. ★ constant',dur:'Battle ropes'},
+      {ico:'🔄',n:'Battle rope lateral slam',          d:'3×15s — rotational conditioning for wrestling periods.',dur:'Battle ropes'},
+    ],
+    sat: [
+      {ico:'🔄',n:'Battle rope double wave',           d:'3×30s on / 30s rest — maintenance volume. ★ constant',dur:'Battle ropes'},
+      {ico:'🔄',n:'Battle rope grappler toss',         d:'3×8 / side — wrestling-specific rotation. ★ constant',dur:'Battle ropes'},
+      {ico:'🔄',n:'Battle rope squat to wave',         d:'3×15s — leg drive into the ropes. Keeps the chain connected.',dur:'Battle ropes'},
+    ],
+  },
+  early: {
+    tue: [
+      {ico:'🔄',n:'Battle rope alternating waves',    d:'3×20s on / 40s rest — competition mode, full recovery between sets. ★ constant',dur:'Battle ropes'},
+      {ico:'🔄',n:'Battle rope power slam',            d:'2×8 — explosive intent maintained. ★ constant',dur:'Battle ropes'},
+      {ico:'🔄',n:'Battle rope outside circles',       d:'2×20s / dir — shoulder health and activation. Lower demand, good for recovery days.',dur:'Battle ropes'},
+    ],
+    sat: [
+      {ico:'🔄',n:'Battle rope double wave',           d:'3×20s on / 40s rest — match schedule governs volume. ★ constant',dur:'Battle ropes'},
+      {ico:'🔄',n:'Battle rope grappler toss',         d:'2×8 / side — stay sharp on the wrestling pattern. ★ constant',dur:'Battle ropes'},
+      {ico:'🔄',n:'Battle rope sprint',               d:'2×10s all-out — short and fast. Pre-match activation if needed.',dur:'Battle ropes'},
+    ],
+  },
+  in: {
+    tue: [
+      {ico:'🔄',n:'Battle rope alternating waves',    d:'2×20s on / 40s rest — in-season minimal. Keep neural pattern without fatigue. ★ constant',dur:'Battle ropes'},
+      {ico:'🔄',n:'Battle rope power slam',            d:'2×6 — maintain explosive output. ★ constant',dur:'Battle ropes'},
+      {ico:'🔄',n:'Battle rope single-arm wave',       d:'2×15s / side — low volume, shoulder activation.',dur:'Battle ropes'},
+    ],
+    sat: [
+      {ico:'🔄',n:'Battle rope double wave',           d:'2×20s on / 40s rest — minimal in-season volume. ★ constant',dur:'Battle ropes'},
+      {ico:'🔄',n:'Battle rope grappler toss',         d:'2×6 / side — keep the wrestling pattern. ★ constant',dur:'Battle ropes'},
+      {ico:'🔄',n:'Battle rope rotational slam',       d:'2×6 / side — stay explosive, brief.',dur:'Battle ropes'},
+    ],
+  },
+};
+
+const CARDIO_DATA=[
+  {ico:'🏃',n:'Sprint intervals',d:'8×100m all-out / 90s rest — or 6×200m / 2 min rest. Track, turf, or grass.',dur:'~25 min'},
+  {ico:'🚴',n:'Assault bike intervals',d:'10 rounds: 30s max effort / 90s easy. Monitor watts — hold output.',dur:'~20 min'},
+  {ico:'🏊',n:'Pool sprint sets',d:'10×50m freestyle fast / 30s rest. Or 400m continuous technique swim.',dur:'~30 min'},
+  {ico:'💪',n:'Grip and neck prehab',d:'Towel pull-ups 3×max · Neck bridging 3×60s · Wrist roller 3×down-and-up',dur:'15 min'},
+];
+
+const REST_DATA=[
+  {ico:'🧘',n:'Mobility flow',d:'Hip flexors 10 min · Thoracic spine 10 min · Shoulder capsule 10 min',dur:'30 min'},
+  {ico:'🏊',n:'Easy swim (optional)',d:'Low-intensity laps — technique not speed. Outstanding joint recovery.',dur:'20 min'},
+  {ico:'🚶',n:'Light walk',d:'15–30 min easy pace. Keep blood moving.',dur:'20 min'},
+  {ico:'🍽️',n:'Nutrition and sleep',d:'High protein, 8–9 hrs sleep. Recovery is where adaptation happens.',dur:'All day'},
+];
+
+const STRETCH_SECTIONS=[
+  {label:'Dynamic warm-up (pre — all days)',rows:[
+    {n:'Leg swing — front to back',d:'10 / side',badge:'Hip',bc:'b-green'},
+    {n:'Leg swing — lateral',d:'10 / side',badge:'Hip',bc:'b-green'},
+    {n:'Walking lunge with rotation',d:'10 / side',badge:'Hip · thoracic',bc:'b-blue'},
+    {n:'Arm circle — forward and back',d:'15 / direction',badge:'Shoulder',bc:'b-purple'},
+    {n:'World\'s greatest stretch',d:'5 / side',badge:'Full body',bc:'b-orange'},
+    {n:'Hip 90/90 flow',d:'8 / side',badge:'Hip',bc:'b-green'},
+    {n:'Thoracic rotation (kneeling)',d:'10 / side',badge:'T-spine',bc:'b-blue'},
+  ]},
+  {label:'Static cool-down — post lifting',rows:[
+    {n:'Pigeon pose',d:'60s / side',badge:'Hip',bc:'b-green'},
+    {n:'Couch stretch (quad / hip flexor)',d:'60s / side',badge:'Quad · hip',bc:'b-green'},
+    {n:'Doorway chest stretch',d:'45s / side',badge:'Chest · shoulder',bc:'b-purple'},
+    {n:'Lat stretch (hang or band)',d:'45s / side',badge:'Lat',bc:'b-orange'},
+    {n:'Supine hamstring stretch',d:'45s / side',badge:'Hamstring',bc:'b-green'},
+    {n:'Child\'s pose with reach',d:'60s',badge:'T-spine · lat',bc:'b-blue'},
+  ]},
+  {label:'Static cool-down — post explosive / cardio',rows:[
+    {n:'Standing calf stretch — straight knee',d:'45s / side',badge:'Calf',bc:'b-amber'},
+    {n:'Standing calf stretch — bent knee (soleus)',d:'45s / side',badge:'Soleus',bc:'b-amber'},
+    {n:'Hip flexor lunge stretch',d:'60s / side',badge:'Hip',bc:'b-green'},
+    {n:'Seated groin stretch',d:'60s',badge:'Groin',bc:'b-green'},
+    {n:'Cross-body shoulder stretch',d:'30s / side',badge:'Shoulder',bc:'b-purple'},
+  ]},
+  {label:'Sunday deep mobility flow (20 min)',rows:[
+    {n:'90/90 hip flow — active rotation',d:'2 min / side',badge:'Hip',bc:'b-green'},
+    {n:'Pigeon pose',d:'90s / side',badge:'Glute · hip',bc:'b-green'},
+    {n:'Pancake stretch (wide squat hold)',d:'2 min',badge:'Groin',bc:'b-green'},
+    {n:'Thread-the-needle (thoracic)',d:'60s / side',badge:'T-spine',bc:'b-blue'},
+    {n:'Quadruped thoracic rotation',d:'10 reps / side',badge:'T-spine',bc:'b-blue'},
+    {n:'Overhead band distraction',d:'45s / side',badge:'Shoulder',bc:'b-purple'},
+    {n:'Ankle dorsiflexion wall stretch',d:'60s / side',badge:'Ankle',bc:'b-amber'},
+    {n:'Neck half-circles (slow)',d:'8 reps each direction',badge:'Neck',bc:'b-gray'},
+  ]},
+];
+
+const ANKLE_SECTIONS=[
+  {label:'Ankle mobility — angle board',rows:[
+    {n:'Angle board dorsiflexion stretch',d:'3×60s / side',badge:'Mobility',bc:'b-amber'},
+    {n:'Angle board calf stretch — straight knee',d:'3×45s / side',badge:'Mobility',bc:'b-amber'},
+    {n:'Angle board calf stretch — bent knee (soleus)',d:'3×45s / side',badge:'Mobility',bc:'b-amber'},
+    {n:'Half-kneeling ankle rock',d:'2×15 / side',badge:'Mobility',bc:'b-amber'},
+    {n:'Banded ankle distraction',d:'2×60s / side',badge:'Mobility',bc:'b-amber'},
+  ]},
+  {label:'Physio ball — ABCs and joint control',rows:[
+    {n:'Physio ball alphabet (ABCs)',d:'2× full alphabet / side',badge:'Proprioception',bc:'b-purple'},
+    {n:'Physio ball ankle circles — slow CW and CCW',d:'2×15 / side',badge:'Proprioception',bc:'b-purple'},
+    {n:'Physio ball figure-8 trace',d:'2×10 / side',badge:'Proprioception',bc:'b-purple'},
+    {n:'Physio ball single-leg balance roll',d:'2×30s / side',badge:'Stability',bc:'b-purple'},
+  ]},
+  {label:'Ankle strength',rows:[
+    {n:'Single-leg calf raise on angle board (3s up / 3s down)',d:'3×15 / side',badge:'Strength',bc:'b-green'},
+    {n:'Tibialis raise (heels on angle board edge)',d:'3×20',badge:'Strength',bc:'b-green'},
+    {n:'Weighted tibialis raise (plate on foot)',d:'3×15 — add 2.5–5lb plate on top of foot when bodyweight is easy',badge:'Progression',bc:'b-blue'},
+    {n:'Peroneal side walk (band around feet)',d:'3×15 steps / dir',badge:'Strength',bc:'b-green'},
+    {n:'Seated calf raise — soleus focus',d:'3×20',badge:'Strength',bc:'b-green'},
+  ]},
+  {label:'Proprioception and stability',rows:[
+    {n:'Single-leg balance on angle board — eyes open',d:'3×30s / side',badge:'Stability',bc:'b-purple'},
+    {n:'Single-leg balance on angle board — eyes closed',d:'3×20s / side',badge:'Stability',bc:'b-purple'},
+    {n:'Single-leg mini squat + reach (star drill)',d:'3×8 / side',badge:'Stability',bc:'b-purple'},
+    {n:'Lateral hop + stick on angle board (hold 2s)',d:'3×6 / side',badge:'Stability',bc:'b-purple'},
+    {n:'Banded ankle 4-way pull resist',d:'3×12 / direction',badge:'Stability',bc:'b-purple'},
+  ]},
+  {label:'Oscillating bar — tissue prep (do first)',rows:[
+    {n:'Oscillating bar — Achilles and calf',d:'60s / side pre-session',badge:'Tissue',bc:'b-gray'},
+    {n:'Oscillating bar — lateral ankle and peroneals',d:'45s / side pre-session',badge:'Tissue',bc:'b-gray'},
+    {n:'Oscillating bar — plantar fascia (sole of foot)',d:'45s / side pre-session',badge:'Tissue',bc:'b-gray'},
+  ]},
+  {label:'Sport-specific loading',rows:[
+    {n:'Jump rope — single leg (30s / side)',d:'3 rounds',badge:'Dynamic',bc:'b-orange'},
+    {n:'Lateral bound + stick on angle board',d:'3×6 / side',badge:'Dynamic',bc:'b-orange'},
+    {n:'Wrestling level-change drill (ankle focus)',d:'3×10',badge:'Dynamic',bc:'b-orange'},
+  ]},
+];
+
+const SHOULDER_SECTIONS=[
+  {label:'Oscillating bar — tissue prep (do first)',rows:[
+    {n:'Oscillating bar — pec minor and anterior shoulder',d:'60s / side pre-session',badge:'Tissue',bc:'b-gray'},
+    {n:'Oscillating bar — posterior capsule and rear delt',d:'60s / side pre-session',badge:'Tissue',bc:'b-gray'},
+    {n:'Oscillating bar — upper trap and levator scapulae',d:'45s / side pre-session',badge:'Tissue',bc:'b-gray'},
+  ]},
+  {label:'Rotator cuff — external rotation',rows:[
+    {n:'Band pull-apart (pronated grip)',d:'3×20',badge:'RC',bc:'b-purple'},
+    {n:'Band ER at side (90° elbow)',d:'3×15 / side',badge:'RC',bc:'b-purple'},
+    {n:'Side-lying ER (light dumbbell)',d:'3×12 / side',badge:'RC',bc:'b-purple'},
+    {n:'YTWL (band or light DB)',d:'2×10 each letter',badge:'RC · scapula',bc:'b-purple'},
+  ]},
+  {label:'Physio ball — joint stability and RC',rows:[
+    {n:'Physio ball wall circles (shoulder CARs)',d:'2×10 / dir / side',badge:'Stability',bc:'b-purple'},
+    {n:'Physio ball shoulder ABCs (arm on ball, trace alphabet)',d:'1× full alphabet / side — slow and controlled',badge:'RC · mobility',bc:'b-purple'},
+    {n:'Weighted physio ball shoulder ABCs',d:'1× full alphabet / side — hold 2.5–5lb in free hand while tracing',badge:'Progression',bc:'b-blue'},
+    {n:'Physio ball scapular clock (arm on ball, trace clock)',d:'2×full clock / side',badge:'Scapula',bc:'b-blue'},
+    {n:'Physio ball prone ball roll-out',d:'3×10',badge:'Stability',bc:'b-purple'},
+    {n:'Physio ball push-up plus (hands on ball)',d:'3×10',badge:'Scapula',bc:'b-blue'},
+    {n:'Physio ball single-arm balance hold',d:'3×20s / side',badge:'Stability',bc:'b-purple'},
+  ]},
+  {label:'Scapular stability and control',rows:[
+    {n:'Scapular wall slide',d:'3×12',badge:'Scapula',bc:'b-blue'},
+    {n:'Prone Y raise',d:'3×12',badge:'Scapula',bc:'b-blue'},
+    {n:'Serratus punch (band or cable)',d:'3×15',badge:'Scapula',bc:'b-blue'},
+    {n:'Bear crawl hold (scapulae packed)',d:'3×20s',badge:'Scapula',bc:'b-blue'},
+    {n:'Ring or TRX scapular retraction',d:'3×12',badge:'Scapula',bc:'b-blue'},
+  ]},
+  {label:'Shoulder mobility',rows:[
+    {n:'Sleeper stretch (posterior capsule)',d:'3×45s / side',badge:'Mobility',bc:'b-amber'},
+    {n:'Doorway stretch — low, mid, high',d:'30s each position',badge:'Mobility',bc:'b-amber'},
+    {n:'Cross-body stretch',d:'45s / side',badge:'Mobility',bc:'b-amber'},
+    {n:'Overhead band distraction',d:'45s / side',badge:'Mobility',bc:'b-amber'},
+    {n:'Wall angel (standing, slow)',d:'3×10',badge:'Mobility',bc:'b-amber'},
+  ]},
+  {label:'Wrestling-specific loading',rows:[
+    {n:'Face pull (cable — thumbs-up grip)',d:'3×15',badge:'RC · rear delt',bc:'b-orange'},
+    {n:'Cable ER in 90° abduction',d:'3×12 / side',badge:'RC',bc:'b-purple'},
+    {n:'Prone Cuban press (light DB)',d:'3×10',badge:'RC · scapula',bc:'b-purple'},
+    {n:'Bottoms-up KB press (light)',d:'3×8 / side',badge:'Stability',bc:'b-blue'},
+    {n:'Push-up plus (serratus emphasis)',d:'3×12',badge:'Scapula',bc:'b-blue'},
+  ]},
+  {label:'Grip strength — daily',rows:[
+    {n:'Grip tool squeezes (50 / hand)',d:'1×50 / hand — daily non-negotiable',badge:'Grip',bc:'b-orange'},
+    {n:'Towel pull-up',d:'3×max — thick grip taxes forearm extensors and flexors',badge:'Grip',bc:'b-orange'},
+    {n:'Plate pinch hold',d:'3×30s / hand — two plates pinched between thumb and fingers',badge:'Grip',bc:'b-orange'},
+    {n:'Dead hang (straight arm)',d:'3×max seconds — passive shoulder stretch and grip endurance',badge:'Grip · shoulder',bc:'b-orange'},
+    {n:'Farmer carry — grip focus (light to moderate)',d:'3×40m — squeeze the handle the entire walk, no relaxing',badge:'Grip',bc:'b-orange'},
+  ]},
+  {label:'Grip and wrist — accessory',rows:[
+    {n:'Wrist roller — up and down',d:'3× full roll each direction',badge:'Wrist',bc:'b-amber'},
+    {n:'Reverse curl (barbell or DB)',d:'3×12 — pronated grip, trains wrist extensors often neglected',badge:'Wrist · grip',bc:'b-amber'},
+    {n:'Rice bucket — full protocol',d:'3 min — open close, rotate, finger spread in rice bucket',badge:'Grip',bc:'b-orange'},
+    {n:'Finger extension — band',d:'3×20 — band around fingers, spread against resistance',badge:'Grip balance',bc:'b-amber'},
+  ]},
+];
+
+const DAY_STRETCH_NOTES=[
+  'Lift A — ankle + shoulder prehab before session. Static cool-down: lower body focus (quads, hamstrings, hip flexors).',
+  'Explosive — thoracic and hip rotation critical in warm-up. Calf and ankle static holds mandatory after.',
+  'Lift B — full shoulder prehab pre-session. Cool-down: posterior chain (hamstrings, glutes, lats).',
+  'Cardio — calf and soleus stretch mandatory after. Ankle stability work fits well as standalone here.',
+  'Lift C — full shoulder prehab pre-session. Lateral-plane flexibility post-lift: groin, lateral hip.',
+  'Power — both ankle and shoulder prehab post-session. Full cool-down including calf and chest.',
+  'Recovery — 20-min deep mobility flow. Longest stretch window of the week. Nothing skipped.',
+];
+
+const SHOULDER_DAY_NOTES=[
+  'Pressing day — run full protocol before lifting.',
+  'Non-pressing — abbreviated: band pull-aparts + face pulls + sleeper stretch (5 min).',
+  'Pressing day — run full protocol before lifting.',
+  'Non-pressing — abbreviated version is fine.',
+  'Pressing day — run full protocol before lifting.',
+  'Non-pressing — abbreviated: band pull-aparts + face pulls + sleeper stretch.',
+  'Recovery — full protocol at relaxed pace. Best shoulder investment of the week.',
+];
+
+// State
+let curPhase=0, schedDay=0, liftPhase=0, liftDay=0, exploDay=0, stretchDay=0, shoulderDay=0;
+
+// ----- HELPERS -----
+function makeDayTabs(containerId, curDayVar, setter) {
+  const el = document.getElementById(containerId);
+  el.innerHTML = WEEK_DAYS.map((d,i) => `
+    <div class="day-tab ${i===curDayVar?'active':''}" onclick="${setter}(${i})">
+      <div class="dn">${d.name}</div>
+      <div class="dt">${d.tag}</div>
+      <div class="day-dot" style="background:${d.dot}"></div>
+    </div>`).join('');
+}
+
+function buildSections(sections, scheme) {
+  return sections.map(s => `
+    <div class="sec-head">${s.label}<span class="sec-line"></span></div>
+    ${s.rows.map(r => {
+      const reps = scheme ? scheme[r.rep] : r.d;
+      const setsRaw = scheme ? scheme[r.rep] : '';
+      let setsStr = '', repsStr = '';
+      if(scheme && setsRaw && setsRaw.includes('×')) {
+        setsStr = setsRaw.split('×')[0]+' sets';
+        repsStr = setsRaw.split('×')[1]+' reps';
+      } else if(scheme) {
+        setsStr = setsRaw; repsStr = '';
+      } else {
+        setsStr = r.d; repsStr = '';
+      }
+      return `<div class="ex-row">
+        <div>
+          <div class="ex-name">${r.uni?'<span class="u-dot"></span>':''}${r.n}${imgBtn(r.n)}</div>
+          ${repsStr?`<div class="ex-sub">${repsStr}</div>`:''}
+        </div>
+        <div class="ex-right">
+          <div class="ex-sets">${setsStr}</div>
+          <span class="badge ${r.bc}">${r.badge}</span>
+        </div>
+      </div>`;
+    }).join('')}`).join('');
+}
+
+function buildCardioRows(rows) {
+  return rows.map(r=>`<div class="c-row">
+    <div class="c-ico">${r.ico}</div>
+    <div style="flex:1">
+      <div class="c-name">${r.n}${imgBtn(r.n)}</div>
+      <div class="c-desc">${r.d}</div>
+      <div class="c-dur">${r.dur}</div>
+    </div>
+  </div>`).join('');
+}
+
+// ----- HALF MARATHON RUN PLAN -----
+// Per phase, per day [Mon,Tue,Wed,Thu,Fri,Sat,Sun] — distances in miles, null = rest
+// Sunday = long run anchor, building 5mi → 13.1mi, tapering after P3
+// Pace guidance: easy = conversational, moderate = comfortably hard, long = 60-90s/mi slower than race pace
+const RUN_PLAN = {
+  // Phase 1 — Base (Wks 1-3) — establish aerobic habit, easy paces only
+  base: [
+    {day:'Mon', mi:3,   pace:'Easy',     note:'Easy effort, conversational pace'},
+    {day:'Tue', mi:3,   pace:'Easy',     note:'Post-explosive — short and relaxed'},
+    {day:'Wed', mi:null,pace:null,       note:'Rest or walk only'},
+    {day:'Thu', mi:4,   pace:'Easy',     note:'Steady easy run, pair with bike/swim if desired'},
+    {day:'Fri', mi:null,pace:null,       note:'Rest from running'},
+    {day:'Sat', mi:3,   pace:'Easy',     note:'Short recovery run after power session'},
+    {day:'Sun', mi:5,   pace:'Long run', note:'Wk1: 5mi · Wk2: 6mi · Wk3: 7mi — slow and steady'},
+  ],
+  // Phase 2 — Hypertrophy (Wks 4-9) — build mileage, introduce moderate efforts
+  hyp: [
+    {day:'Mon', mi:4,   pace:'Easy',     note:'Easy — legs are working hard in the weight room'},
+    {day:'Tue', mi:4,   pace:'Easy',     note:'Post-explosive — keep effort low'},
+    {day:'Wed', mi:null,pace:null,       note:'Rest from running'},
+    {day:'Thu', mi:5,   pace:'Moderate', note:'Comfortably hard — can speak in short sentences'},
+    {day:'Fri', mi:null,pace:null,       note:'Rest from running'},
+    {day:'Sat', mi:4,   pace:'Easy',     note:'Short easy run after power session'},
+    {day:'Sun', mi:8,   pace:'Long run', note:'Wk4: 7mi · Wk5-6: 8mi · Wk7-8: 9mi · Wk9: 10mi'},
+  ],
+  // Phase 3 — Strength (Wks 10-16) — peak mileage, long run reaches 13.1
+  str: [
+    {day:'Mon', mi:4,   pace:'Easy',     note:'Easy — heavy lifting takes priority, run relaxed'},
+    {day:'Tue', mi:4,   pace:'Easy',     note:'Post-explosive — keep easy, no tempo effort'},
+    {day:'Wed', mi:null,pace:null,       note:'Rest from running'},
+    {day:'Thu', mi:5,   pace:'Moderate', note:'Tempo or fartlek — 20 min moderate effort in the middle'},
+    {day:'Fri', mi:null,pace:null,       note:'Rest from running'},
+    {day:'Sat', mi:5,   pace:'Easy',     note:'Easy shakeout before Sunday long run'},
+    {day:'Sun', mi:12,  pace:'Long run', note:'Wk10-11: 10-11mi · Wk12-13: 11-12mi · Wk14-15: 12-13mi · Wk16: 13.1mi'},
+  ],
+  // Phase 4 — Peaking (Wks 17-18) — lifting peaks, long run holds at 10-12mi for non-XC runners
+  peak: [
+    {day:'Mon', mi:3,   pace:'Easy',     note:'Short and easy — protect CNS for heavy lifting'},
+    {day:'Tue', mi:3,   pace:'Easy',     note:'Minimal volume, keep legs moving'},
+    {day:'Wed', mi:null,pace:null,       note:'Rest from running'},
+    {day:'Thu', mi:4,   pace:'Easy',     note:'Easy only — no moderate effort during peaking'},
+    {day:'Fri', mi:null,pace:null,       note:'Rest from running'},
+    {day:'Sat', mi:3,   pace:'Easy',     note:'Easy shakeout'},
+    {day:'Sun', mi:11,  pace:'Long run', note:'Wk17: 12mi · Wk18: 10mi — hold aerobic base, easy pace only'},
+  ],
+  // Phase 5 — Preseason (Wks 19-20) — practice starts, long run stays strong for non-XC runners
+  pre: [
+    {day:'Mon', mi:3,   pace:'Easy',     note:'Practice in AM counts — this is optional extra'},
+    {day:'Tue', mi:3,   pace:'Easy',     note:'Easy only — explosive session takes priority'},
+    {day:'Wed', mi:null,pace:null,       note:'Rest from extra running — practice covers it'},
+    {day:'Thu', mi:4,   pace:'Easy',     note:'Easy run or skip if practice load is high'},
+    {day:'Fri', mi:null,pace:null,       note:'Rest from running'},
+    {day:'Sat', mi:3,   pace:'Easy',     note:'Easy shakeout'},
+    {day:'Sun', mi:10,  pace:'Long run', note:'Wk19: 11mi · Wk20: 10mi — XC athletes skip; non-XC hold this distance'},
+  ],
+  // Phase 6 — Early season (Wks 21-23) — competition begins, long run stays at 10mi for non-XC runners
+  early: [
+    {day:'Mon', mi:3,   pace:'Easy',     note:'Maintenance only — competition is primary load'},
+    {day:'Tue', mi:3,   pace:'Easy',     note:'Easy — no hard running on explosive days'},
+    {day:'Wed', mi:null,pace:null,       note:'Rest from extra running'},
+    {day:'Thu', mi:3,   pace:'Easy',     note:'Easy 20-30 min only'},
+    {day:'Fri', mi:null,pace:null,       note:'Rest from running — save legs for Saturday'},
+    {day:'Sat', mi:3,   pace:'Easy',     note:'Easy shakeout only'},
+    {day:'Sun', mi:10,  pace:'Long run', note:'Hold at 10mi — XC athletes skip this; non-XC maintain aerobic base'},
+  ],
+  // Phase 7 — In-season — minimal maintenance only
+  in: [
+    {day:'Mon', mi:2,   pace:'Easy',     note:'Easy 20 min max — match week recovery'},
+    {day:'Tue', mi:2,   pace:'Easy',     note:'Easy only, skip if fatigued from matches'},
+    {day:'Wed', mi:null,pace:null,       note:'Rest from running'},
+    {day:'Thu', mi:3,   pace:'Easy',     note:'Easy 25-30 min to stay aerobically sharp'},
+    {day:'Fri', mi:null,pace:null,       note:'Rest from running — match tomorrow'},
+    {day:'Sat', mi:2,   pace:'Easy',     note:'Easy shakeout if no match, skip if competing'},
+    {day:'Sun', mi:2,   pace:'Slow/easy',note:'Very easy 20 min — active recovery only, no effort'},
+  ],
+};
+
+let runOpen = false;
+function toggleRun() {
+  runOpen = !runOpen;
+  const body = document.getElementById('runBody');
+  const toggle = document.getElementById('runToggle');
+  if(body) { body.classList.toggle('open', runOpen); }
+  if(toggle) { toggle.classList.toggle('open', runOpen); toggle.textContent = runOpen ? '▲' : '▼'; }
+}
+
+function buildRunBlock(phaseId, dayIndex) {
+  const plan = RUN_PLAN[phaseId];
+  if(!plan) return '';
+  const day = plan[dayIndex];
+  if(!day) return '';
+
+  // Build full week summary when showing any day, highlight the selected day
+  const rows = plan.map((d,i) => {
+    const isToday = i === dayIndex;
+    const dist = d.mi !== null ? d.mi + ' mi' : '— rest';
+    const paceColor = d.mi === null ? 'color:var(--text3)' : isToday ? 'color:#5BA8F0' : 'color:var(--text2)';
+    return `<div class="run-row" style="${isToday?'background:rgba(59,139,219,0.07);margin:0 -4px;padding:7px 4px;border-radius:6px;':''}">
+      <div class="run-day-label" style="${isToday?'color:#5BA8F0;font-weight:600':''}">${d.day}</div>
+      <div style="flex:1;padding:0 8px">
+        <div class="run-dist" style="${paceColor}">${dist}</div>
+        ${d.pace?`<div class="run-note">${d.pace}</div>`:''}
+      </div>
+      <div style="max-width:160px;text-align:right"><div class="run-note">${d.note}</div></div>
+    </div>`;
+  }).join('');
+
+  const todayDist = day.mi !== null ? day.mi + ' mi' : 'Rest day';
+  const openState = runOpen ? 'open' : '';
+
+  return `<div class="run-block">
+    <div class="run-header" onclick="toggleRun()">
+      <div class="run-header-left">
+        <span style="font-size:16px">🏃</span>
+        <div>
+          <div class="run-title">Half marathon training — ${todayDist}</div>
+          <div class="run-optional">Optional · not needed if doing XC · tap to expand week</div>
+        </div>
+      </div>
+      <span class="run-toggle ${openState}" id="runToggle">${runOpen?'▲':'▼'}</span>
+    </div>
+    <div class="run-body ${openState}" id="runBody">
+      ${rows}
+      <div class="run-xc-note">🎽 XC athletes: your practice runs already cover this volume. Treat these distances as a guide only — skip any day where practice load is already high.</div>
+    </div>
+  </div>`;
+}
+
+// ----- DAY CHECKBOXES -----
+// Key format: "p{phaseIndex}_d{dayIndex}" e.g. "p0_d0" = Phase1, Monday
+let dayChecks = {};
+(function loadChecks(){
+  try { dayChecks = JSON.parse(localStorage.getItem('mclifts_daychecks') || '{}'); } catch(e){ dayChecks={}; }
+})();
+function saveChecks(){ try{ localStorage.setItem('mclifts_daychecks', JSON.stringify(dayChecks)); }catch(e){} }
+function checkKey(pi, di){ return 'p'+pi+'_d'+di; }
+function isDayChecked(pi, di){ return !!dayChecks[checkKey(pi,di)]; }
+function toggleDayCheck(pi, di){ const k=checkKey(pi,di); dayChecks[k]=!dayChecks[k]; saveChecks(); renderScheduleContent(); }
+
+function buildDayCheckbox(phaseIdx, dayIdx) {
+  const checked = isDayChecked(phaseIdx, dayIdx);
+  const dayNames = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+  const dayName = dayNames[dayIdx];
+
+  // build last-7-days streak dots (same day of week across last 7 phase slots)
+  const dotHtml = Array.from({length:7}, (_,i) => {
+    const lit = isDayChecked(phaseIdx - i, dayIdx) && phaseIdx - i >= 0;
+    return `<div class="dcs-dot ${lit?'lit':''}"></div>`;
+  }).reverse().join('');
+
+  // count total checks for this day across all phases
+  const totalForDay = Object.keys(dayChecks).filter(k => k.endsWith('_d'+dayIdx) && dayChecks[k]).length;
+
+  return `<div class="day-check-bar ${checked?'checked':''}" onclick="toggleDayCheck(${phaseIdx},${dayIdx})">
+    <div class="day-check-left">
+      <div class="day-check-box">${checked?'&#10003;':''}</div>
+      <div>
+        <div class="day-check-label">${checked?dayName+' done':'Mark '+dayName+' complete'}</div>
+        <div class="day-check-week">${totalForDay > 0 ? totalForDay+' total '+dayName+'s logged' : 'Not yet logged'}</div>
+      </div>
+    </div>
+    <div class="day-check-streak">${dotHtml}</div>
+  </div>`;
+}
+
+// ----- SCHEDULE -----
+function renderPhaseNav() {
+  document.getElementById('phaseNav').innerHTML = PHASES.map((p,i)=>`
+    <button class="phase-btn ${i===curPhase?'active':''}" onclick="setCurPhase(${i})">${'P'+(i+1)+': '+p.name.split('—')[1].trim()}</button>`).join('');
+}
+function renderPhaseInfo() {
+  const p=PHASES[curPhase];
+  document.getElementById('phaseInfo').innerHTML=`<div class="phase-card">
+    <div class="phase-card-header">
+      <div>
+        <div class="phase-name">${p.name}</div>
+        <div class="phase-dates">${p.dates}</div>
+        <div class="phase-load">${p.load}</div>
+      </div>
+    </div>
+    <div class="phase-goal">${p.goal}</div>
+    <div class="phase-chips">${p.chips.map(c=>`<span class="chip ${c.c}">${c.t}</span>`).join('')}</div>
+  </div>`;
+}
+function renderScheduleDays() { makeDayTabs('scheduleDays', schedDay, 'setSchedDay'); }
+function renderScheduleContent() {
+  const p=PHASES[curPhase];
+  const d=DAY_DESCRIPTIONS[schedDay];
+  const wk=WEEK_DAYS[schedDay];
+  let html='';
+  const isLean = curPhase>=5;
+  if(isLean&&d.type==='lift') {
+    const leanData = schedDay===0?LEAN_A:schedDay===2?LEAN_B:LEAN_C;
+    const schemeBank = curPhase===6 ? P7_SCHEMES : LEAN_SCHEMES;
+    const ls = schemeBank[leanData.schemeKey];
+    html+=`<div class="in-season-alert">${ls.label} · 6 exercises · under 60 min</div>`;
+  }
+  if(d.type==='lift') {
+    const fullData = schedDay===0?LIFT_A:schedDay===2?LIFT_B:LIFT_C;
+    const leanData = schedDay===0?LEAN_A:schedDay===2?LEAN_B:LEAN_C;
+    const ldata = isLean ? leanData : fullData;
+    const schemeBank = curPhase===6 ? P7_SCHEMES : LEAN_SCHEMES;
+    const scheme = isLean ? schemeBank[leanData.schemeKey] : p.scheme;
+    html+=`<div class="scheme-row">`;
+    p.chips.forEach(c=>{html+=`<span class="chip ${c.c}">${c.t}</span>`;});
+    html+=`</div>`;
+    if(isLean && ldata.label) html+=`<div style="font-size:11px;font-weight:500;color:var(--green);margin-bottom:8px">${ldata.label}</div>`;
+    html+=buildSections(ldata.sections, scheme);
+    const note = isLean ? ldata.note : d.note;
+    html+=`<div class="note-box">${note}</div>`;
+  } else if(d.type==='explo') {
+    const edata=schedDay===1?EXPLO_TUE:EXPLO_SAT;
+    const ropeKey=schedDay===1?'tue':'sat';
+    const ropes=(BATTLE_ROPES[p.id]||BATTLE_ROPES['base'])[ropeKey];
+    html+=buildCardioRows(edata);
+    html+=`<div style="font-size:10px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;color:var(--text3);margin:10px 0 5px;display:flex;align-items:center;gap:8px">Battle ropes — ${p.name.split('—')[1]?.trim()||''}<span style="flex:1;height:0.5px;background:var(--border)"></span><span style="font-size:9px;font-weight:400;letter-spacing:0;text-transform:none;color:var(--text3)">★ = constant each phase</span></div>`;
+    html+=buildCardioRows(ropes);
+    html+=`<div class="note-box">${d.note}</div>`;
+  } else if(d.type==='cardio') {
+    html+=buildCardioRows(CARDIO_DATA);
+    html+=`<div class="note-box">${d.note}</div>`;
+  } else {
+    html+=buildCardioRows(REST_DATA);
+    html+=`<div class="note-box">${d.note}</div>`;
+  }
+  html+=buildRunBlock(p.id, schedDay);
+  html+=buildDayCheckbox(curPhase, schedDay);
+  document.getElementById('scheduleContent').innerHTML=html;
+}
+function setCurPhase(i){curPhase=i;renderPhaseNav();renderPhaseInfo();renderScheduleDays();renderScheduleContent();}
+function setSchedDay(i){schedDay=i;renderScheduleDays();renderScheduleContent();}
+
+// ----- LIFTING -----
+function renderLiftPhaseNav() {
+  document.getElementById('liftPhaseNav').innerHTML = PHASES.map((p,i)=>`
+    <button class="phase-btn ${i===liftPhase?'active':''}" onclick="setLiftPhase(${i})">${'P'+(i+1)}</button>`).join('');
+}
+function renderLiftDayTabs() {
+  const el=document.getElementById('liftDayTabs');
+  const liftDays=[{name:'Mon',tag:'Full body A'},{name:'Wed',tag:'Full body B'},{name:'Fri',tag:'Full body C'}];
+  el.innerHTML=`<div style="grid-column:1/4;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px">`+liftDays.map((d,i)=>`
+    <div class="day-tab ${i===liftDay?'active':''}" onclick="setLiftDay(${i})">
+      <div class="dn">${d.name}</div>
+      <div class="dt">${d.tag}</div>
+      <div class="day-dot" style="background:#1DB87A"></div>
+    </div>`).join('')+'</div>';
+  el.style.gridTemplateColumns='1fr';
+}
+function renderLiftContent() {
+  const p=PHASES[liftPhase];
+  const isLean=liftPhase>=5;
+  const fullData=[LIFT_A,LIFT_B,LIFT_C][liftDay];
+  const leanData=[LEAN_A,LEAN_B,LEAN_C][liftDay];
+  const ldata=isLean?leanData:fullData;
+  const scheme=isLean?(liftPhase===6?P7_SCHEMES:LEAN_SCHEMES)[leanData.schemeKey]:p.scheme;
+  let html=`<div class="scheme-row">`;
+  p.chips.forEach(c=>{html+=`<span class="chip ${c.c}">${c.t}</span>`;});
+  html+=`</div>`;
+  if(isLean){
+    const schemeBank=liftPhase===6?P7_SCHEMES:LEAN_SCHEMES;
+    const ls=schemeBank[leanData.schemeKey];
+    html+=`<div class="in-season-alert" style="margin-bottom:10px">${ls.label} · 6 exercises · under 60 min</div>`;
+  }
+  if(isLean&&ldata.label) html+=`<div style="font-size:11px;font-weight:500;color:var(--green);margin-bottom:8px">${ldata.label}</div>`;
+  html+=buildSections(ldata.sections,scheme);
+  const notes=['XC in AM — lift afternoon. 90–120s rest on main lifts, 60s accessories.','Heaviest pull day. Trap bar deadlift is the anchor. Posterior chain and hip stability focus.','End of lifting week. Higher-rep block builds lactate tolerance. Lateral-plane unilateral work.'];
+  html+=`<div class="note-box">${isLean?ldata.note:notes[liftDay]}</div>`;
+  document.getElementById('liftContent').innerHTML=html;
+}
+function setLiftPhase(i){liftPhase=i;renderLiftPhaseNav();renderLiftContent();}
+function setLiftDay(i){liftDay=i;renderLiftDayTabs();renderLiftContent();}
+
+// ----- EXPLOSIVE -----
+function renderExploDays() {
+  const el=document.getElementById('exploDays');
+  const eDays=[
+    {name:'Tue',tag:'Explosive/Plyo',dot:'#E06030'},
+    {name:'Sat',tag:'Power complex',dot:'#E06030'},
+  ];
+  el.innerHTML=`<div style="grid-column:1/8;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px">`+eDays.map((d,i)=>`
+    <div class="day-tab ${i===exploDay?'active':''}" style="${i===exploDay?'border-color:#E06030;background:rgba(224,96,48,0.12)':''}" onclick="setExploDay(${i})">
+      <div class="dn" style="${i===exploDay?'color:#E06030':''}">${d.name}</div>
+      <div class="dt">${d.tag}</div>
+      <div class="day-dot" style="background:${d.dot}"></div>
+    </div>`).join('')+'</div>';
+  el.style.gridTemplateColumns='1fr';
+}
+function renderExploContent() {
+  const edata=exploDay===0?EXPLO_TUE:EXPLO_SAT;
+  const ropeKey=exploDay===0?'tue':'sat';
+  const ph=PHASES[curPhase];
+  const ropes=(BATTLE_ROPES[ph.id]||BATTLE_ROPES['base'])[ropeKey];
+  const notes=['Rest fully 2–3 min between explosive sets. Speed and power output matter more than fatigue.','Treat each explosive block as a 2-min wrestling period. Loaded carries build clinch strength.'];
+  let html=buildCardioRows(edata);
+  html+=`<div style="font-size:10px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;color:var(--text3);margin:10px 0 5px;display:flex;align-items:center;gap:8px">Battle ropes — ${ph.name.split('—')[1]?.trim()||''}<span style="flex:1;height:0.5px;background:var(--border)"></span><span style="font-size:9px;font-weight:400;letter-spacing:0;text-transform:none;color:var(--text3)">★ = constant each phase</span></div>`;
+  html+=buildCardioRows(ropes);
+  html+=`<div class="note-box">${notes[exploDay]}</div>`;
+  document.getElementById('exploContent').innerHTML=html;
+}
+function setExploDay(i){exploDay=i;renderExploDays();renderExploContent();}
+
+// ----- CARDIO -----
+function renderCardioContent() {
+  let html=`<div class="alert alert-gray" style="margin-bottom:10px">Choose 1–2 modalities per session based on recovery. Sprints carry the most wrestling-specific carryover.</div>`;
+  html+=buildCardioRows(CARDIO_DATA);
+  html+=`<div class="note-box">XC practice provides daily aerobic base. Thursday cardio supplements with sprint quality work and swim recovery. Swimming is outstanding for joint health during high-volume training.</div>`;
+  document.getElementById('cardioContent').innerHTML=html;
+}
+
+// ----- STRETCHING -----
+function renderStretchDays() { makeDayTabs('stretchDays', stretchDay, 'setStretchDay'); }
+function renderStretchContent() {
+  let html=`<div class="t-chips"><span class="t-chip">Pre: 8–10 min dynamic</span><span class="t-chip">Post: 10–12 min static</span><span class="t-chip">Evening: 5 min holds (optional)</span></div>`;
+  html+=`<div class="alert alert-gray">${DAY_STRETCH_NOTES[stretchDay]}</div>`;
+  html+=buildSections(STRETCH_SECTIONS, null);
+  html+=`<div class="note-box">Dynamic stretching before every session — always. Static holds only after training, never cold. Evening hold work (60–90s per stretch) is where long-term flexibility gains accumulate fastest.</div>`;
+  document.getElementById('stretchContent').innerHTML=html;
+}
+function setStretchDay(i){stretchDay=i;renderStretchDays();renderStretchContent();}
+
+// ----- ANKLE -----
+function renderAnkleContent() {
+  let html=`<div class="t-chips"><span class="t-chip">Daily: 8–10 min</span><span class="t-chip">After warm-up or evening</span><span class="t-chip">Every day — non-negotiable</span></div>`;
+  html+=`<div class="alert alert-gray">Ankles absorb constant stress from running, shooting, sprawling, and mat work. Builds dorsiflexion range, peroneal strength, tibialis strength, and proprioception. Tap <span style="color:#5BA8F0;font-weight:600">▶ demo</span> for images and cues.</div>`;
+  html+=buildSections(ANKLE_SECTIONS, null);
+  html+=`<div class="note-box">If you've had a past ankle sprain, prioritize peroneal and proprioception work — the two most undertrained elements after injury. Progress to unstable surfaces only after 2–3 weeks of solid base work.<br><br><strong style="color:var(--text2)">Shin splint prevention:</strong> The tibialis raise is the single most effective exercise for preventing medial tibial stress syndrome (shin splints). Prioritize it every session, especially during high running volume weeks. Weak glutes also contribute — the banded clamshells in hip prehab protect the shin indirectly by reducing foot pronation on landing.</div>`;
+  document.getElementById('ankleContent').innerHTML=html;
+}
+
+// ----- SHOULDER -----
+function renderShoulderDays() { makeDayTabs('shoulderDays', shoulderDay, 'setShoulderDay'); }
+function renderShoulderContent() {
+  const isPress=(shoulderDay===0||shoulderDay===2||shoulderDay===4);
+  const isSun=(shoulderDay===6);
+  let html=`<div class="t-chips"><span class="t-chip">Daily: 10–12 min</span><span class="t-chip">Before lifting or practice</span><span class="t-chip">Every day — especially pressing</span></div>`;
+  if(isPress) html+=`<div class="alert alert-purple">Pressing day — run full protocol before lifting. 10–12 min dramatically reduces impingement risk. Tap <span style="color:#5BA8F0;font-weight:600">▶ demo</span> for images and cues.</div>`;
+  else if(isSun) html+=`<div class="alert alert-green">Recovery day — full protocol at relaxed pace. Best shoulder investment of the week. Tap <span style="color:#5BA8F0;font-weight:600">▶ demo</span> on any exercise.</div>`;
+  else html+=`<div class="alert alert-gray">Non-pressing day — abbreviated: band pull-aparts + face pulls + sleeper stretch (5 min). Tap <span style="color:#5BA8F0;font-weight:600">▶ demo</span> on any exercise for an image.</div>`;
+  html+=buildSections(SHOULDER_SECTIONS, null);
+  html+=`<div class="note-box">Shoulder prehab non-negotiable on pressing days. The bottoms-up KB press and Cuban press load the rotator cuff in positions that mirror real grappling demands.</div>`;
+  document.getElementById('shoulderContent').innerHTML=html;
+}
+function setShoulderDay(i){shoulderDay=i;renderShoulderDays();renderShoulderContent();}
+
+const LANDMINE_SECTIONS=[
+  {label:'Lower body — bilateral',rows:[
+    {n:'Landmine squat (two-hand goblet)',d:'4×8–10',badge:'Bilateral',bc:'b-green'},
+    {n:'Landmine deadlift (sumo stance)',d:'4×6–8',badge:'Bilateral',bc:'b-green'},
+    {n:'Landmine Romanian deadlift',d:'3×10',badge:'Bilateral',bc:'b-green'},
+  ]},
+  {label:'Lower body — unilateral',rows:[
+    {n:'Landmine split-stance deadlift',d:'3×8 / side',badge:'Unilateral',bc:'b-amber'},
+    {n:'Landmine lateral lunge',d:'3×10 / side',badge:'Unilateral',bc:'b-amber'},
+    {n:'Landmine reverse lunge',d:'3×10 / side',badge:'Unilateral',bc:'b-amber'},
+    {n:'Landmine single-leg RDL',d:'3×8 / side',badge:'Unilateral',bc:'b-amber'},
+  ]},
+  {label:'Upper body — push',rows:[
+    {n:'Landmine press (single-arm, standing)',d:'4×8–10 / side',badge:'Push',bc:'b-blue'},
+    {n:'Landmine split-stance press',d:'3×10 / side',badge:'Push',bc:'b-blue'},
+    {n:'Landmine squat to press (single-arm)',d:'3×8 / side',badge:'Push',bc:'b-blue'},
+    {n:'Landmine kneeling press',d:'3×10 / side',badge:'Push',bc:'b-blue'},
+  ]},
+  {label:'Upper body — pull',rows:[
+    {n:'Landmine row (single-arm, hinge)',d:'4×8–10 / side',badge:'Pull',bc:'b-orange'},
+    {n:'Landmine high pull (single-arm)',d:'4×6 / side',badge:'Pull',bc:'b-orange'},
+    {n:'Landmine RDL to row combo',d:'3×8 / side',badge:'Pull',bc:'b-orange'},
+    {n:'Landmine T-bar row (two-arm)',d:'4×8',badge:'Pull',bc:'b-orange'},
+  ]},
+  {label:'Rotational and core',rows:[
+    {n:'Landmine 180 / full-contact twist',d:'4×8 / side',badge:'Core',bc:'b-gray'},
+    {n:'Landmine anti-rotation press (Pallof variant)',d:'3×10 / side',badge:'Core',bc:'b-gray'},
+    {n:'Landmine rotation (Meadows twist)',d:'3×10 / side',badge:'Core',bc:'b-gray'},
+    {n:'Landmine wood chop (low to high)',d:'3×10 / side',badge:'Core',bc:'b-gray'},
+    {n:'Landmine sit-up to press',d:'3×10',badge:'Core',bc:'b-gray'},
+  ]},
+  {label:'Power and explosive',rows:[
+    {n:'Landmine clean (single-arm)',d:'5×4 / side',badge:'Explosive',bc:'b-orange'},
+    {n:'Landmine rotational press (full power)',d:'4×6 / side',badge:'Explosive',bc:'b-orange'},
+    {n:'Landmine jump squat (light load)',d:'4×5',badge:'Explosive',bc:'b-orange'},
+    {n:'Landmine lateral slam',d:'3×6 / side',badge:'Explosive',bc:'b-orange'},
+  ]},
+];
+
+// ----- IMAGE LOOKUP -----
+// Maps exercise names to Wger exercise IDs or direct GIF URLs from public domain sources
+const EX_CUES = {
+  'Landmine squat (two-hand goblet)':              'Hinge back, bar close to chest, drive through heels. Great for upright torso and knee tracking.',
+  'Landmine squat (two-hand)':                     'Both hands on end of bar, squat deep. Upright torso, knees track over toes.',
+  'Landmine deadlift (sumo stance)':               'Wide stance, toes out. Both hands on bar, brace hard, pull from the hips.',
+  'Landmine Romanian deadlift':                    'Hip hinge, soft knee on working leg. Bar travels close to the body throughout.',
+  'Landmine split-stance deadlift':                'Staggered stance, single-arm. Front leg drives, rear stabilizes.',
+  'Landmine lateral lunge':                        'Step out, sit into the hip, bar stays in front. Builds adductor and lateral hip for wrestling stance.',
+  'Landmine reverse lunge':                        'Step back, lower knee under control. Front shin stays vertical.',
+  'Landmine single-leg RDL':                       'Balance on one leg, hinge and reach bar toward the floor. Single-leg hamstring and glute.',
+  'Landmine press (single-arm, standing)':         'Press from shoulder in an arc, slight lean into bar. Feet shoulder-width, core braced.',
+  'Landmine split-stance press':                   'Staggered stance adds rotational stability demand. Drive from shoulder height.',
+  'Landmine squat to press (single-arm)':          'Squat holding bar at shoulder, drive up and press at the top in one fluid motion.',
+  'Landmine kneeling press':                       'Tall kneeling removes leg drive, isolates shoulder and core. Great for prehab.',
+  'Landmine row (single-arm, hinge)':              'Hip hinge, row bar to the hip. Elbow tracks close. Squeeze lat at the top.',
+  'Landmine row (single-arm)':                     'Hip hinge position, pull bar to hip. Elbow close, full lat contraction at top.',
+  'Landmine high pull (single-arm)':               'Explosive, drive from hips and pull bar to chin height, elbow leads.',
+  'Landmine RDL to row combo':                     'Hinge down (RDL), at the bottom row the bar up to the hip, then stand. Two moves in one.',
+  'Landmine T-bar row (two-arm)':                  'Straddle the bar, hinge forward, row both hands to chest. Heavy compound back builder.',
+  'Landmine 180 / full-contact twist':             'Arms extended, rotate bar from hip to hip in a powerful arc. Drive from hips, arms just guide.',
+  'Landmine 180 (rotational slam)':                'Explosive rotation, swing bar powerfully from hip to hip. Full hip pivot each rep.',
+  'Landmine anti-rotation press':                  'Hold bar extended to one side, resist rotation. Slow and controlled. Core stays square.',
+  'Landmine anti-rotation press (Pallof variant)': 'Hold bar extended to one side, resist rotation. Slow and controlled. Core stays square.',
+  'Landmine rotation (Meadows twist)':             'Standing rotation. Pivot through the hips, arms stay relatively straight.',
+  'Landmine wood chop (low to high)':              'Start low at one hip, swing bar diagonally up across the body. Rotational power.',
+  'Landmine sit-up to press':                      'Lie holding bar at chest. Sit up and press overhead at the top.',
+  'Landmine clean (single-arm)':                   'Hip hinge start, explosive pull, catch at the shoulder. Wrestling-specific power.',
+  'Landmine rotational press (full power)':        'Rotate through hips, transfer force from ground through torso into the press.',
+  'Landmine jump squat (light load)':              'Squat and explode into a jump holding the bar. Light weight only, speed is the goal.',
+  'Landmine lateral slam':                         'Rotate and slam bar down laterally with power. Combines rotational speed with deceleration.',
+  'Back squat':                        'Bar on upper traps, brace hard. Squat to parallel or below, drive knees out, explode up.',
+  'Barbell bench press':               'Retract scapulae, arch slightly, bar touches mid-chest. Drive feet into the floor.',
+  'Barbell row (pronated)':            'Hinge to ~45 degrees, pull bar to lower ribcage. Lead with elbows, squeeze scapulae.',
+  'Trap bar deadlift':                 'Stand in center of trap bar, neutral grip, brace, drive the floor away. Hips and shoulders rise together.',
+  'Weighted pull-up':                  'Dead hang start, pull elbows down and back, chin over bar. Control the descent.',
+  'Push press (overhead)':             'Dip slightly at the knees, drive explosively and press bar overhead. Lock out fully.',
+  'Front squat':                       'Elbows high, bar on front delts. Stay upright, knees track toes, drive up through the whole foot.',
+  'Incline barbell press':             'Set at 30-45 degrees. Retract scapulae. Bar lowers to upper chest. Drive up and slightly back.',
+  'Chest-supported barbell row':       'Chest on pad, row bar to lower ribcage. No body English, isolates the back.',
+  'Romanian deadlift':                 'Soft knees, hinge back until hamstrings load. Bar stays close to legs throughout.',
+  'Bulgarian split squat':             'Rear foot elevated, front foot out. Lower the knee toward the floor, drive through the front heel.',
+  'Single-arm dumbbell row':           'Brace on bench, row DB to hip. Elbow close, full stretch at bottom, squeeze at top.',
+  'Single-leg hip thrust':             'Upper back on bench, one foot planted. Drive hips up hard, squeeze glute at top.',
+  'Step-up with knee drive':           'Step up onto box, drive opposite knee up at the top. Controlled step back down.',
+  'Single-leg RDL (barbell or DB)':   'Balance on working leg, hinge forward and reach weight toward the floor. Hamstring controls descent.',
+  'Reverse lunge (front-rack)':        'Bar in front-rack or goblet position. Step back and lower the knee. Front shin vertical.',
+  'Single-leg leg press':              'One foot centered on platform. Press full ROM, control the eccentric. Do not lock knee at top.',
+  'Pistol squat or skater squat':      'Single-leg squat to full depth. Arms forward for balance. Control the descent completely.',
+  'Dumbbell split press (kneeling)':   'Half-kneeling, single DB pressed overhead. Core stays square, resist rotation.',
+  'Single-arm cable row (hip-height)': 'Cable at hip height, single arm. Hinge slightly, row to hip. Full stretch and squeeze.',
+  'Single-arm cable row':              'Cable at low-mid height, single arm. Pull to hip, squeeze lat, control the return.',
+  'Lateral lunge (dumbbell)':          'Step wide to the side, sit into the hip of the working leg. Keep the other leg straight.',
+  'Dumbbell incline press':            'Set bench 30-45 degrees. Control the descent, drive up, squeeze pecs at top.',
+  'Face pull (cable)':                 'Cable at face height, rope attachment, pull to forehead with elbows flared. External rotation emphasis.',
+  'Face pull (cable — thumbs-up grip)':'Thumbs up on rope. Pull to forehead, elbows high and wide. Rear delt and rotator cuff.',
+  'Triceps pushdown':                  'Elbows pinned to sides, press down to full extension. Slow eccentric.',
+  'Chest-supported DB row':            'Lie prone on incline bench. Row DBs to ribcage. No momentum, pure back work.',
+  'Neutral-grip chin-up (slow eccentric)': 'Palms facing each other. Pull up, then lower in 3-4 seconds. Biceps and lat emphasis.',
+  'Push-up (weighted or archer)':      'Weighted: plate on back. Archer: extend one arm wide each rep. Chest to floor.',
+  'TRX or ring row':                   'Body at an angle, pull chest to handles. Adjust angle to increase difficulty.',
+  'Goblet squat':                      'Hold weight at chest, squat deep, elbows inside knees at bottom. Great for mobility and strength.',
+  'Ab wheel rollout':                  'Start kneeling. Roll out until hips are about to drop, pull back with the lats.',
+  'Dead bug':                          'Lower opposite arm and leg simultaneously. Low back stays pressed into the floor.',
+  'Copenhagen plank hold':             'Side plank, top leg elevated on bench. Adductor and lateral core. Hold steady.',
+  'Pallof press':                      'Press cable or band out from chest and hold. Resist rotation. Further you extend the harder.',
+  'Suitcase carry':                    'Heavy KB or DB in one hand, walk tall. Resist lateral lean. Oblique and QL.',
+  'GHD sit-up':                        'Full range on the GHD. Control the descent. Hip flexor and abdominal strength through full ROM.',
+  'Hanging leg raise':                 'Hang from bar, raise legs to 90 degrees or higher. Controlled, no swinging.',
+  'Plank to push-up':                  'Forearm plank, press up one arm at a time to push-up position, then lower back down.',
+  'Farmer carry (heavy)':              'Heavy implements both hands, walk with purpose. Full-body tension and grip strength.',
+  'Wall ankle dorsiflexion stretch':          'Foot flat, drive knee over toes toward wall. Increase distance as mobility improves.',
+  'Ankle circles — slow CW and CCW':          'Seated or standing. Full slow circles in both directions. Lubricate the joint.',
+  'Half-kneeling ankle rock':                 'Half-kneel, rock front knee forward over the toes. Slow and controlled range.',
+  'Banded ankle distraction':                 'Band around ankle, step forward into a stretch. Move through range with traction applied.',
+  'Single-leg calf raise (3s up / 3s down)':  'Slow tempo builds eccentric strength, the key for sprain prevention. Full ROM.',
+  'Tibialis raise (heels down, toes up)':     'Raise toes as high as possible. Builds tibialis anterior, the neglected ankle stabilizer.',
+  'Peroneal side walk (band around feet)':    'Band around feet, step sideways. Keep toes forward, resist band throughout.',
+  'Seated calf raise (soleus focus)':         'Knees bent to 90 degrees, raise heels. Targets the soleus, the deep calf stabilizer.',
+  'Single-leg balance — eyes closed':         'Remove visual input to challenge proprioception. Flat ground before unstable surfaces.',
+  'Single-leg balance — foam pad or BOSU':    'Unstable surface demands more ankle stability. Progress from eyes-closed flat ground.',
+  'Single-leg mini squat + reach (star drill)':'Squat on one leg and reach in 6 directions. Balance, strength, and proprioception combined.',
+  'Lateral hop + stick (hold 2s)':            'Hop laterally, land on one foot, hold 2s. Trains landing mechanics and ankle stability.',
+  'Banded ankle 4-way pull resist':           'Band pulls in one direction while you resist. 4 directions: front, back, in, out.',
+  'Jump rope — single leg (30s / side)':      'Single leg jump rope. Build rhythm. Builds calf and proprioceptive endurance.',
+  'Lateral bound + stick':                    'Bound laterally, stick the landing for 2s. Builds reactive ankle stability under load.',
+  'Wrestling level-change drill (ankle focus)':'Explosive level change with attention to foot position and ankle loading on each plant.',
+  'Band pull-apart (pronated grip)':          'Arms straight in front, pull band apart to chest. Squeeze scapulae at end range.',
+  'Band ER at side (90° elbow)':              'Elbow bent 90 degrees, upper arm at side. Rotate forearm out against band resistance.',
+  'Side-lying ER (light dumbbell)':           'Elbow bent to 90 degrees, rotate forearm up. Small movement, do not compensate with body.',
+  'YTWL (band or light DB)':                 'Prone, raise arms into Y, T, W and L shapes. Hits all parts of rotator cuff and scapular muscles.',
+  'Scapular wall slide':                      'Back flat on wall, slide arms up while keeping contact. Serratus and lower trap.',
+  'Prone Y raise':                            'Lie face down, raise both arms into Y shape. Light weight. Lower trap and rotator cuff.',
+  'Serratus punch (band or cable)':           'Press out, let scapula protract fully at end range. Builds serratus anterior.',
+  'Bear crawl hold (scapulae packed)':        'Push-up position, scapulae actively pulled down and together. Hold without sagging.',
+  'Ring or TRX scapular retraction':          'Body angled back, pull handles while squeezing scapulae together. Slow and deliberate.',
+  'Sleeper stretch (posterior capsule)':      'Lie on working shoulder, gently rotate forearm toward the floor. Never force this one.',
+  'Doorway stretch — low, mid, high':         'Three hand positions on doorframe. Each targets a different part of the anterior shoulder.',
+  'Cross-body stretch':                       'Pull arm across chest and hold. Stretches posterior capsule and rear delt.',
+  'Overhead band distraction':                'Band attached low, reach overhead with it. Creates traction through the joint as you stretch.',
+  'Wall angel (standing, slow)':              'Back flat on wall, slowly raise and lower arms like a snow angel. Scapular control.',
+  'Cable ER in 90° abduction':               'Arm out to side at 90 degrees, elbow bent. Rotate forearm up against cable. RC in throwing position.',
+  'Prone Cuban press (light DB)':             'Prone, row to 90 degrees, rotate forearm up, press overhead. Three-phase RC and scapular movement.',
+  'Bottoms-up KB press (light)':              'KB upside down and press. Unstable load demands rotator cuff activation throughout.',
+  'Push-up plus (serratus emphasis)':         'Standard push-up, then at the top push the floor away to protract the scapulae fully.',
+  'Leg swing — front to back':               'Hold for balance, swing one leg forward and back. Relaxed hip flexor and hamstring.',
+  'Leg swing — lateral':                     'Swing leg side to side across the body. Hip adductor and abductor warm-up.',
+  'Walking lunge with rotation':              'Step into lunge, rotate torso toward the front leg. Hip and thoracic mobility combined.',
+  'Arm circle — forward and back':            'Full circles from the shoulder. Start small and increase range. Shoulder warm-up.',
+  "World's greatest stretch":                'Lunge forward, hand to floor, rotate arm to ceiling. Best single warm-up movement.',
+  'Hip 90/90 flow':                          'Sit with both legs in 90 degree bent position. Rotate hips to bring front shin flat, then switch.',
+  'Thoracic rotation (kneeling)':            'Half-kneeling, hand behind head, rotate elbow to the ceiling. T-spine mobility.',
+  'Pigeon pose':                              'Front shin across, back leg long. Sit into the hip. Deep glute and external rotator stretch.',
+  'Couch stretch (quad / hip flexor)':        'Rear foot up the wall, knee on floor. Drive hip forward. Deep quad and hip flexor.',
+  'Doorway chest stretch':                    'Forearm on doorframe, step through. Targets pec minor and anterior shoulder.',
+  'Lat stretch (hang or band)':               'Hang from bar or pull with band overhead. Full lat lengthening.',
+  'Supine hamstring stretch':                 'Lie flat, raise one leg and hold. Keep opposite leg on the floor.',
+  "Child's pose with reach":                 'Sit back on heels, arms reaching forward. Lat, thoracic, and shoulder stretch combined.',
+  'Standing calf stretch — straight knee':    'Foot flat, lean into wall. Straight knee targets the gastrocnemius.',
+  'Standing calf stretch — bent knee (soleus)':'Bend the knee slightly. Shifts load to the soleus, the deeper calf.',
+  'Hip flexor lunge stretch':                 'Deep lunge, back knee down. Tuck the pelvis to increase the hip flexor stretch.',
+  'Seated groin stretch':                     'Soles of feet together, press knees toward floor. Inner thigh and groin.',
+  '90/90 hip flow — active rotation':         'Active movement through the 90/90 position. Rotate hips, move through range.',
+  'Pancake stretch (wide squat hold)':        'Wide stance, fold forward between the legs. Groin and inner thigh deep stretch.',
+  'Thread-the-needle (thoracic)':             'On all fours, thread one arm under the body and rotate. Deep thoracic stretch.',
+  'Quadruped thoracic rotation':              'On all fours, hand behind head, rotate elbow to ceiling then toward floor.',
+  'Ankle dorsiflexion wall stretch':          'Toes against wall, knee drives forward. Calf and dorsiflexion stretch.',
+  'Neck half-circles (slow)':                 'Drop chin to chest, slowly roll ear to shoulder each way. Never roll fully back.',
+  // ── ANGLE BOARD ──
+  'Angle board dorsiflexion stretch':                    'Stand on angle board with toes elevated. Drive knee forward over toes, hold at end range. Best dorsiflexion tool available.',
+  'Angle board calf stretch — straight knee':            'On angle board, heel low, toes elevated. Straight leg targets the gastrocnemius belly. Lean gently into wall.',
+  'Angle board calf stretch — bent knee (soleus)':       'Same position on angle board but bend the knee 20-30 degrees. Shifts stretch deep into the soleus and Achilles insertion.',
+  'Single-leg calf raise on angle board (3s up / 3s down)':'Perform calf raise with toes elevated on angle board. Greater range of motion than flat floor — full stretch at bottom, squeeze at top.',
+  'Tibialis raise (heels on angle board edge)':          'Heels on the raised edge of the angle board, raise toes maximally. Angle board increases ROM for the tibialis anterior.',
+  'Weighted tibialis raise (plate on foot)':              'Rest a 2.5–5lb plate on top of the foot. Same motion as bodyweight tibialis raise. Start light — the tibialis fatigues fast. Progress load weekly once 3×20 feels easy. The primary shin splint prevention progression.',
+  'Single-leg balance on angle board — eyes open':       'Stand on one foot on the angle board. The incline challenges ankle in dorsiflexion-loaded position. Hands out for safety first.',
+  'Single-leg balance on angle board — eyes closed':     'Progress from eyes open. Removing visual input forces the ankle to rely purely on proprioceptive feedback.',
+  'Lateral hop + stick on angle board (hold 2s)':        'Hop laterally and land on the angle board. The inclined surface makes the stick challenge significantly harder.',
+  'Lateral bound + stick on angle board':                'Bound laterally and land on angle board, absorb and hold. Trains reactive ankle stability on an unstable inclined surface.',
+  // ── PHYSIO BALL — ANKLE ──
+  'Physio ball alphabet (ABCs)':                         'Sit with ankle resting on the 2lb physio ball. Use your ankle to trace every letter of the alphabet. Moves the joint through full ROM in all planes.',
+  'Physio ball ankle circles — slow CW and CCW':         'Ankle on physio ball, trace slow full circles clockwise then counterclockwise. The light resistance of the ball adds neuromuscular demand.',
+  'Physio ball figure-8 trace':                          'Ankle on physio ball, trace a figure-8 pattern. Combines frontal and sagittal plane movement for comprehensive joint mobility.',
+  'Physio ball single-leg balance roll':                 'Stand on one foot on top of the physio ball — very advanced. Start by just holding onto something and placing the ball under the foot. Build to full freestanding.',
+  // ── PHYSIO BALL — SHOULDER ──
+  'Physio ball wall circles (shoulder CARs)':            'Press the 2lb physio ball against the wall with one hand. Make slow controlled circles — small to large. Wakes up the RC and builds shoulder CARs (controlled articular rotations).',
+  'Physio ball shoulder ABCs (arm on ball, trace alphabet)': 'Rest the back of the hand or wrist on the physio ball against the wall. Use the shoulder to trace every letter of the alphabet — slow and deliberate. Moves the joint through full range in all planes. Excellent RC warm-up and neuromuscular activation.',
+  'Weighted physio ball shoulder ABCs':                  'Same as the bodyweight version but hold a 2.5–5lb weight in the free hand while tracing. The added load increases the rotator cuff demand through the full alphabet movement. Progress to this once the bodyweight version feels fully controlled.',
+  'Physio ball scapular clock (arm on ball, trace clock)':'Forearm resting on physio ball against the wall. Trace clock positions 12, 3, 6, 9 by moving the scapula, not the arm. Isolates scapular control.',
+  'Physio ball prone ball roll-out':                     'Lie prone, hands on physio ball. Roll ball forward and back while keeping core braced. Serratus and scapular stability under load.',
+  'Physio ball push-up plus (hands on ball)':            'Push-up position with both hands on physio ball. At the top, push through to protract scapulae fully. Instability forces RC engagement.',
+  'Physio ball single-arm balance hold':                 'One hand pressed into physio ball on the floor, hold the position. Demands continuous RC activation to stabilize the unstable surface.',
+  // ── OSCILLATING BAR — ANKLE ──
+  'Oscillating bar — Achilles and calf':                      'Apply oscillating bar along the Achilles tendon and calf belly with moderate pressure and vibration. Reduces tissue tone before dorsiflexion work.',
+  'Oscillating bar — lateral ankle and peroneals':            'Run oscillating bar along the outside of the ankle and up the peroneals. Loosens lateral chain tissue before stability work.',
+  'Oscillating bar — plantar fascia (sole of foot)':          'Apply along the arch and heel. Prep work before loading the foot — especially valuable after long runs or heavy days.',
+  // ── OSCILLATING BAR — SHOULDER ──
+  'Oscillating bar — pec minor and anterior shoulder':        'Run oscillating bar across the pec minor and front of the shoulder. Reduces tissue tension before pressing — helps the posterior capsule mobilize more freely.',
+  'Oscillating bar — posterior capsule and rear delt':        'Apply oscillating bar across the back of the shoulder and rear delt. Prep for sleeper stretch — loosens the posterior capsule.',
+  'Oscillating bar — upper trap and levator scapulae':        'Run oscillating bar along the upper trap from shoulder to neck base. Reduces tone in muscles that restrict overhead range.',
+  // ── OSCILLATING BAR — HIP ──
+  'Oscillating bar — hip flexor and TFL':                     'Apply oscillating bar along the front of the hip and TFL (outer hip). Reduces tone in hip flexors that restrict extension — do before hip mobility work.',
+  'Oscillating bar — glute and piriformis':                   'Apply to the glute and deep into the piriformis area. Moderate pressure with vibration. Key prep before clamshells and hip rotational work.',
+  'Oscillating bar — IT band and lateral hip':                'Run oscillating bar along the IT band and lateral hip. Prep for lateral chain before banded lateral walks and abduction work.',
+  'Oscillating bar — adductors (inner thigh)':               'Apply along the inner thigh adductors. Inner thigh is often the tightest hip structure in wrestlers — critical prep before lateral lunge and banded sumo work.',
+  // ── HIP MOBILITY ──
+  'Hip 90/90 active rotation':                                'Sit with both legs in 90 degree position. Actively rotate hips to drop the front shin flat, pause, switch sides. Builds active internal rotation range.',
+  'Hip CARs (controlled articular rotations)':               'Stand on one leg, lift the other and make the largest possible slow hip circle — forward, out, back, in. Own every degree of range through the full circle.',
+  'Deep squat hip rock':                                      'Sit at the bottom of a squat, hands on floor. Rock hips side to side, loading each hip in deep flexion alternately. Opens groin and hip capsule.',
+  'Lateral lunge hip stretch — hold at bottom':               'Step wide into a lateral lunge and sit at the bottom. Hold with the hip loaded, breathe into the stretch. Deep adductor and lateral hip.',
+  'Pigeon pose — active breathing':                           'Front shin across, back leg long. Each exhale, actively sink deeper into the hip. Breathing drives the stretch rather than passive time.',
+  'Couch stretch — hip flexor':                               'Rear foot on wall, knee on floor. Tuck the pelvis to remove the lower back arch — that tuck is what makes this stretch actually target the hip flexor.',
+  // ── BANDED HIP — ACTIVATION ──
+  'Banded clamshell':                                         'Band above knees, side lying, hips at 45 degrees. Open the top knee like a clamshell — do not let the pelvis rotate back. Highest priority glute med exercise.',
+  'Banded lateral walk (monster walk)':                       'Band above or below knees, athletic stance. Step laterally keeping constant band tension. Do not let feet come together. Glute med endurance.',
+  'Banded hip abduction — standing':                          'Band above ankle, stand on one leg, kick the banded leg out to the side. Slow and controlled. Keep the standing hip stable, no lateral lean.',
+  'Banded hip extension — standing kickback':                 'Band at ankle, kick straight back. Squeeze the glute at the top. Keep the lower back still — movement comes from the hip, not the spine.',
+  'Banded hip thrust (band across hips)':                     'Band across the hips adds resistance at the top of the thrust where a barbell loses tension. Drive through the heel, squeeze hard at top, hold 1s.',
+  'Banded sumo squat pulse':                                  'Band above knees, wide sumo stance. Pulse at the bottom third of the squat. Drives glute med and adductor simultaneously — great for wrestling base position.',
+  // ── BANDED HIP — ROTATIONAL ──
+  'Banded diagonal hip drive (forward + across)':             'Band anchored to the side, step forward and across the midline with one leg. Trains the hip in the transverse plane — mirrors wrestling stance transitions.',
+  'Banded pull-through (hip hinge)':                         'Cable or band between legs from behind. Hinge forward, let the band pull back, then drive hips through explosively. Teaches hip-dominant movement pattern.',
+  'Banded standing hip IR + ER':                              'Band at ankle, stand on one leg. Rotate the free leg internally then externally against the band. Trains active hip rotation range — critical for wrestling base control.',
+  'Banded fire hydrant':                                      'Band above knees, quadruped. Lift one knee out to the side. Keep the pelvis square. Hits glute med from a different angle than clamshells.',
+  'Banded bird dog':                                          'Band around wrists or ankles. Quadruped, extend opposite arm and leg against band resistance. Challenges core stability and hip stability simultaneously.',
+  // ── PHYSIO BALL — HIP ──
+  'Physio ball supine hip bridge hold':                       'Lie on back, both heels on physio ball. Drive hips up to bridge and hold. The unstable ball demands continuous hamstring and glute activation.',
+  'Physio ball single-leg hip bridge':                        'One foot on ball, other leg raised. Much harder than two feet — forces the hip stabilizers to work overtime to keep the ball from rolling.',
+  'Physio ball lateral hip roll':                             'Lie on side, physio ball at outer hip. Slowly roll the hip back and forth over the ball. Passive release of the TFL and lateral glute.',
+  'Physio ball seated hip CARs':                             'Sit on bench, physio ball between knees. Lift one knee while squeezing ball with the other. Adds adductor co-contraction to the hip CAR movement.',
+  // ── WRESTLING HIP ──
+  'Banded level change — resisted shot':                      'Band around hips anchored behind. Drive a level change and penetration step against the resistance. Trains hip drive into the shot — directly sport specific.',
+  'Banded hip shift — lateral stance load':                   'Band pulling from one side, shift hips laterally against it. Trains the stance hip to resist lateral force — mirrors defending a single leg.',
+  'Single-leg hip hinge to drive (hip pop)':                  'Stand on one leg, hinge at the hip, then explosively pop the hip through to full extension. Builds single-leg hip power for level changes and sprawls.',
+  'Deep squat hold to explosive stand':                       'Hold the bottom of a deep squat for 3s, then explode to standing as fast as possible. Trains the stretch-shortening cycle from the wrestling stance position.',
+  // ── GRIP AND WRIST ──
+  'Grip tool squeezes (50 / hand)':       '50 full squeezes per hand per day — squeeze all the way closed, release fully each rep. Use the grip tool daily, separate from lifting. Build toward holding the squeeze for 1–2s each rep as you get stronger.',
+  'Towel pull-up':                         'Drape a thick towel over a bar and grip both ends. Pull up normally. The unstable thick grip taxes the forearm flexors and extensors far harder than a standard bar — starts easier than you think, gets brutal fast.',
+  'Plate pinch hold':                      'Pinch two weight plates smooth-side out between your thumb and fingers. Hold for time. Develops the pincer strength critical for wrestling wrist and hand control.',
+  'Dead hang (straight arm)':             'Hang from the bar with straight arms. Do not engage the shoulders — fully passive hang. Decompresses the spine, stretches the shoulder capsule passively, and builds grip endurance simultaneously.',
+  'Farmer carry — grip focus (light to moderate)': 'Lighter than the heavy carry — focus entirely on squeezing the handle continuously throughout the walk. No relaxing the grip between steps. Builds grip endurance under fatigue.',
+  'Wrist roller — up and down':            'Roll the weight up by winding the rope, then slowly lower it by unrolling. Both directions train different parts of the forearm. Keep your arms parallel to the floor throughout.',
+  'Reverse curl (barbell or DB)':         'Palms facing down, curl up. Trains the wrist extensors and brachioradialis — the muscles that balance the forearm and are almost always undertrained relative to biceps. Key for healthy elbow and wrist.',
+  'Rice bucket — full protocol':          'Plunge hand into rice bucket. Cycle through: open-close fingers 20×, rotate wrist CW + CCW 20×, finger spread 20×, grip and twist 20×. Builds grip in every plane simultaneously.',
+  'Finger extension — band':              'Wrap a thick rubber band or finger extension band around all fingers. Spread them against the resistance. Balances the grip flexors — prevents the chronic tendon issues common in heavy grappling athletes.',
+  // ── EXPLOSIVE / PLYOMETRIC ──
+  'Broad jump':                               'Load hips back, swing arms, jump for max horizontal distance. Soft two-foot landing, absorb through hips and knees.',
+  'Lateral hurdle hop':                       'Quick lateral hops over hurdle or line. Minimize ground contact time. Stay on balls of feet.',
+  'Reactive drop step':                       'Drop step in one direction on a visual or audio cue. Drive off the outside foot explosively.',
+  'Rotational med ball wall throw':           'Load the hip, rotate through the core, release ball into wall with full power. Reset and repeat.',
+  'Med ball overhead slam':                   'Reach full extension overhead, slam ball into floor with max force. Catch on bounce or reset.',
+  'Med ball chest pass jump':                 'Squat, load, then simultaneously jump and chest pass the ball. Power from legs transfers into the throw.',
+  'Resisted level change drill':              'Band or partner resists the level change. Drive hips through the resistance on the shot.',
+  'Sprawl to base (explosive)':               'From standing, snap hips hard to the floor on the sprawl, then explode back to base position immediately.',
+  'Sandbag shouldering':                      'Straddle the bag, squat, drive hips and load the bag to one shoulder in one explosive movement.',
+  'Box jump (max height)':                    'Full hip extension at takeoff — do not cheat the jump. Step down from box, never jump down.',
+  'Single-leg box jump':                      'Takeoff from one foot, land on two feet on the box. Control the landing before stepping down.',
+  'Depth drop to broad jump':                 'Step off box, absorb the landing with soft knees, immediately redirect into a max broad jump. Minimize ground contact.',
+  'Power clean':                              'Bar from floor — explosive pull, shrug, pull elbows through, catch in a quarter squat. Full hip extension at the top.',
+  'Hang snatch or high pull':                 'From hang position just above the knee. Explosive shrug and pull — snatch catches overhead, high pull stops at chin.',
+  'Push jerk':                                'Dip with the knees, drive explosively, drop under the bar and lock out overhead. Stand to finish.',
+  'Landmine full-contact twist':              'Arms extended, rotate bar powerfully from hip to hip. Full hip pivot each rep. Drive from legs not arms.',
+  'Depth drop to broad jump':                 'Step off box, absorb, immediately redirect into max broad jump. Keep ground contact time minimal.',
+  'Reactive shuffle and 10m sprint':          'Lateral shuffle for 3–4 steps, then explode into a 10m sprint on command. Simulates mat movement.',
+  'Yoke or barbell carry':                    'Load on traps or yoke. Walk as fast as possible with tight core and tall posture. Builds clinch strength and bracing.',
+  'Sandbag shouldering and walk':             'Shoulder the bag explosively, walk 20m with it loaded. Mirrors wrestling body control under load.',
+  'Match simulation drilling':               'Partner drilling at match intensity. 2 min on, 30s off. Treat each round as a real period.',
+  // ── BATTLE ROPES ──
+  'Battle rope alternating waves':           'Hold one end of each rope, alternate arms up and down creating a wave pattern. Stay in athletic stance, knees bent. Drive from the hips and core — not just the arms. The wave should travel all the way to the anchor.',
+  'Battle rope lateral slam':                'Both ropes together, slam them to the left then the right alternately. Rotate through the core each slam. Directly mirrors the rotational mechanics of a wrestling snap-down or head control.',
+  'Battle rope power slam':                  'Raise both ropes overhead, then drive them down into the floor with maximum force. Reset fully between each rep — this is a power exercise, not a conditioning one. 10 reps with full intent beats 20 sloppy ones.',
+  'Battle rope double wave':                 'Both ropes moving simultaneously up and down. Harder than alternating waves — demands full bilateral effort. Stay tall, push through the legs as well as the arms.',
+  'Battle rope squat to wave':               'Start in a squat, explode upward and slam the ropes simultaneously at the top of the jump. Links lower body power into the rope movement — trains the kinetic chain from feet to hands.',
+  'Battle rope grappler toss':               'Rotate and slam both ropes to one side in one explosive movement — like throwing an opponent in a hip toss. Pivot through the feet, rotate the hips, drive through the shoulder. Alternate sides each rep.',
+  'Battle rope outside circles':             'Both ropes, make large outward circles simultaneously. Continuous tension on the shoulder. Great warm-up and rotator cuff activation — easier than waves, good for opening sessions.',
+  'Battle rope lateral shuffle wave':        'Alternate waves while shuffling laterally. Foot speed and arm endurance simultaneously. Simulates wrestling stance movement under fatigue.',
+  'Battle rope sprint':                      'Alternating waves at absolute maximum speed for a very short burst. Think of it like a 10–15s all-out sprint — maximum arm turnover rate. Full rest between sets.',
+  'Battle rope jump slam':                   'Jump and slam both ropes simultaneously on landing. The landing force transfers into the slam. Triple extension — ankles, knees, hips — before the slam.',
+  'Battle rope single-arm wave':             'One rope, one arm. The unilateral demand challenges the core to resist rotation while producing the wave. Builds shoulder stability and unilateral endurance.',
+  'Battle rope rotational slam':             'Stand sideways to the anchor. Slam both ropes to the far side using full hip rotation. Pivot the back foot. Most wrestling-specific movement pattern in the battle rope toolkit.',
+  // ── CARDIO ──
+  'Sprint intervals':                         'All-out effort for the full distance. Full recovery between reps — these are not tempo runs.',
+  'Assault bike intervals':                   '30s max effort on the assault bike — arms and legs. Track your wattage and try to hold it across rounds.',
+  'Pool sprint sets':                         'Sprint each 50m rep hard. Focus on breath control and flip turns. Active rest on the wall.',
+  'Grip and neck prehab':                     'Towel pull-ups build wrestling-specific grip. Neck bridging done slowly with full control — never rush.',
+};
+
+function showExDemo(name) {
+  const cue = EX_CUES[name] || null;
+  const query = encodeURIComponent(name + ' exercise tutorial');
+  const ytUrl = 'https://www.youtube.com/results?search_query=' + query;
+  document.getElementById('imgModalTitle').textContent = name;
+  document.getElementById('imgModalTag').textContent = cue ? 'Coaching cue' : '';
+  document.getElementById('imgModalDesc').textContent = cue || '';
+  document.getElementById('imgModalImg').innerHTML = `
+    <div style="padding:20px;text-align:center;width:100%">
+      <div style="font-size:13px;color:var(--text2);margin-bottom:16px;line-height:1.5">Tap below to watch a demo on YouTube. Opens in Safari.</div>
+      <a href="${ytUrl}" target="_blank" style="display:inline-block;background:#FF0000;color:#fff;font-size:13px;font-weight:600;padding:12px 24px;border-radius:8px;text-decoration:none">&#9654; Watch on YouTube</a>
+      <div style="font-size:11px;color:var(--text3);margin-top:12px">Searches: "${name}"</div>
+    </div>`;
+  document.getElementById('imgModalBg').classList.add('open');
+}
+function closeModal() { document.getElementById('imgModalBg').classList.remove('open'); }
+function closeImgModal(e) { if(e.target===document.getElementById('imgModalBg')) closeModal(); }
+
+function imgBtn(name) {
+  return `<button class="img-btn" onclick="showExDemo('${name.replace(/'/g,"\\'")}')">&#9654; demo</button>`;
+}
+
+const HIP_SECTIONS=[
+  {label:'Oscillating bar — tissue prep (do first)',rows:[
+    {n:'Oscillating bar — hip flexor and TFL',d:'60s / side pre-session',badge:'Tissue',bc:'b-gray'},
+    {n:'Oscillating bar — glute and piriformis',d:'60s / side pre-session',badge:'Tissue',bc:'b-gray'},
+    {n:'Oscillating bar — IT band and lateral hip',d:'45s / side pre-session',badge:'Tissue',bc:'b-gray'},
+    {n:'Oscillating bar — adductors (inner thigh)',d:'45s / side pre-session',badge:'Tissue',bc:'b-gray'},
+  ]},
+  {label:'Hip mobility',rows:[
+    {n:'Hip 90/90 active rotation',d:'2×10 / side',badge:'Mobility',bc:'b-amber'},
+    {n:'Hip CARs (controlled articular rotations)',d:'2×5 / side — slow full circle',badge:'Mobility',bc:'b-amber'},
+    {n:'Deep squat hip rock',d:'2×10 — rock side to side at bottom of squat',badge:'Mobility',bc:'b-amber'},
+    {n:'Lateral lunge hip stretch — hold at bottom',d:'3×45s / side',badge:'Mobility',bc:'b-amber'},
+    {n:'Pigeon pose — active breathing',d:'3×60s / side',badge:'Mobility',bc:'b-amber'},
+    {n:'Couch stretch — hip flexor',d:'3×60s / side',badge:'Mobility',bc:'b-amber'},
+  ]},
+  {label:'Banded hip — activation and strength',rows:[
+    {n:'Banded clamshell',d:'3×20 / side',badge:'Glute med',bc:'b-green'},
+    {n:'Banded lateral walk (monster walk)',d:'3×15 steps / dir',badge:'Glute med',bc:'b-green'},
+    {n:'Banded hip abduction — standing',d:'3×15 / side',badge:'Glute med',bc:'b-green'},
+    {n:'Banded hip extension — standing kickback',d:'3×15 / side',badge:'Glute max',bc:'b-green'},
+    {n:'Banded hip thrust (band across hips)',d:'3×15',badge:'Glute max',bc:'b-green'},
+    {n:'Banded sumo squat pulse',d:'3×20',badge:'Glute med · adductor',bc:'b-green'},
+  ]},
+  {label:'Banded hip — rotational and multi-plane',rows:[
+    {n:'Banded diagonal hip drive (forward + across)',d:'3×10 / side',badge:'Multi-plane',bc:'b-blue'},
+    {n:'Banded pull-through (hip hinge)',d:'3×15',badge:'Posterior chain',bc:'b-orange'},
+    {n:'Banded standing hip IR + ER',d:'2×10 each dir / side',badge:'IR / ER',bc:'b-blue'},
+    {n:'Banded fire hydrant',d:'3×15 / side',badge:'Glute med',bc:'b-green'},
+    {n:'Banded bird dog',d:'3×10 / side',badge:'Stability',bc:'b-purple'},
+  ]},
+  {label:'Physio ball — hip and core stability',rows:[
+    {n:'Physio ball supine hip bridge hold',d:'3×30s — ball under feet',badge:'Stability',bc:'b-purple'},
+    {n:'Physio ball single-leg hip bridge',d:'3×12 / side — one foot on ball',badge:'Stability',bc:'b-purple'},
+    {n:'Physio ball lateral hip roll',d:'2×10 / side — ball at outer hip, roll slowly',badge:'Tissue',bc:'b-gray'},
+    {n:'Physio ball seated hip CARs',d:'2×5 / side — seated, lift and rotate',badge:'Mobility',bc:'b-amber'},
+  ]},
+  {label:'Wrestling-specific hip loading',rows:[
+    {n:'Banded level change — resisted shot',d:'4×6 / side',badge:'Wrestling',bc:'b-orange'},
+    {n:'Banded hip shift — lateral stance load',d:'3×10 / side',badge:'Wrestling',bc:'b-orange'},
+    {n:'Single-leg hip hinge to drive (hip pop)',d:'3×8 / side',badge:'Power',bc:'b-orange'},
+    {n:'Deep squat hold to explosive stand',d:'3×8',badge:'Power',bc:'b-orange'},
+  ]},
+];
+
+// ----- HIP -----
+function renderHipContent() {
+  let html=`<div class="t-chips" style="margin-bottom:10px">
+    <span class="t-chip">Daily: 10–12 min</span>
+    <span class="t-chip">Best done: pre-session or evening</span>
+    <span class="t-chip">Oscillating bar first, then banded work</span>
+  </div>`;
+  html+=`<div class="alert alert-gray" style="margin-bottom:10px">Hip strength and mobility is the engine of wrestling — takedowns, scrambles, and defensive base all load the hip. The oscillating bar loosens tissue before banded activation and loaded movement. Tap <span style="color:#5BA8F0;font-weight:600">▶ demo</span> on any exercise.</div>`;
+  html+=buildSections(HIP_SECTIONS, null);
+  html+=`<div class="note-box">Banded clamshells and lateral walks are the highest-priority exercises here — glute med weakness is one of the most common contributors to knee, hip, and low back issues in wrestlers. Run those every single day. The full protocol 3–4×/week is plenty.</div>`;
+  document.getElementById('hipContent').innerHTML=html;
+}
+
+function renderLandmineContent() {
+  let html=`<div class="alert alert-gray" style="margin-bottom:12px">The landmine is one of the best tools for wrestling — every movement loads rotational force, asymmetrical strength, and hip drive simultaneously. Tap <span style="color:#5BA8F0;font-weight:600">▶ demo</span> on any exercise for an image and coaching cue.</div>`;
+  html+=`<div class="t-chips" style="margin-bottom:12px">
+    <span class="t-chip" style="background:var(--green-bg);color:var(--green);border-color:var(--green)">Mon — Lift A</span>
+    <span class="t-chip" style="background:var(--green-bg);color:var(--green);border-color:var(--green)">Wed — Lift B</span>
+    <span class="t-chip" style="background:var(--green-bg);color:var(--green);border-color:var(--green)">Fri — Lift C</span>
+    <span class="t-chip" style="background:var(--orange-bg);color:var(--orange);border-color:var(--orange)">Sat — Explosive</span>
+  </div>`;
+  html+=LANDMINE_SECTIONS.map(s=>`
+    <div class="sec-head">${s.label}<span class="sec-line"></span></div>
+    <div>${s.rows.map(r=>`<div class="ex-row">
+      <div class="ex-name">${r.n}${imgBtn(r.n)}</div>
+      <div class="ex-right">
+        <div class="ex-sets">${r.d}</div>
+        <span class="badge ${r.bc}">${r.badge}</span>
+      </div>
+    </div>`).join('')}</div>`).join('');
+  html+=`<div class="note-box">Setup: wedge the bar into a corner or use a landmine attachment. Keep the working shoulder packed down throughout all pressing movements. On rotational work, drive from the hips — the arms just guide the bar. Start lighter than you think — the rotational loading is deceptive.</div>`;
+  document.getElementById('landmineContent').innerHTML=html;
+}
+
+// ----- SECTION SWITCHING -----
+function switchSection(id) {
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.getElementById('sec-'+id).classList.add('active');
+  document.querySelectorAll('.main-nav button').forEach((b,i)=>{
+    const ids=['progress','schedule','lifting','explosive','cardio','stretch','ankle','shoulder','hip','landmine'];
+    b.classList.toggle('active', ids[i]===id);
+  });
+}
+
+// ----- PROGRESS TAB -----
+const PROG_PHASES=[
+  {name:'P1 — Base building',   color:'#1D9E75', weeks:[1,2,3]},
+  {name:'P2 — Hypertrophy',     color:'#378ADD', weeks:[4,5,6,7,8,9]},
+  {name:'P3 — Strength',        color:'#7F77DD', weeks:[10,11,12,13,14,15,16]},
+  {name:'P4 — Peaking',         color:'#D85A30', weeks:[17,18]},
+  {name:'P5 — Preseason',       color:'#BA7517', weeks:[19,20]},
+  {name:'P6 — Early season',    color:'#E24B4A', weeks:[21,22,23]},
+  {name:'P7 — In-season',       color:'#888780', weeks:[24]},
+];
+const PROG_WEEK_STARTS=['Jun 2','Jun 9','Jun 16','Jun 23','Jun 30','Jul 7','Jul 14','Jul 21','Jul 28','Aug 4','Aug 11','Aug 18','Aug 25','Sep 1','Sep 8','Sep 15','Sep 22','Sep 29','Oct 6','Oct 13','Oct 20','Oct 27','Nov 3','Nov 10'];
+const PROG_TOTAL=24;
+
+let wkChecked=[];
+(function loadWkChecks(){try{wkChecked=JSON.parse(localStorage.getItem('mclifts_wks')||'[]');}catch(e){wkChecked=[];}})();
+function saveWkChecks(){try{localStorage.setItem('mclifts_wks',JSON.stringify(wkChecked));}catch(e){}}
+function toggleWk(wk){const x=wkChecked.indexOf(wk);x===-1?wkChecked.push(wk):wkChecked.splice(x,1);saveWkChecks();renderProgressContent();}
+function resetWks(){wkChecked=[];saveWkChecks();renderProgressContent();}
+
+// auto-detect current week from date
+function getCurrentWeek(){
+  const start=new Date('2026-06-02');
+  const now=new Date();
+  const diff=Math.floor((now-start)/(7*24*60*60*1000))+1;
+  return Math.min(Math.max(diff,1),PROG_TOTAL);
+}
+
+function renderProgressContent(){
+  const done=wkChecked.length;
+  const pct=Math.round((done/PROG_TOTAL)*100);
+  const curWk=getCurrentWeek();
+
+  let html=`<div class="prog-stats">
+    <div class="prog-stat"><div class="prog-stat-val">${done}</div><div class="prog-stat-lbl">Weeks complete</div></div>
+    <div class="prog-stat"><div class="prog-stat-val">${pct}%</div><div class="prog-stat-lbl">Overall progress</div></div>
+  </div>
+  <div class="prog-bar-wrap"><div class="prog-bar-fill" style="width:${pct}%"></div></div>
+  <div class="prog-legend">
+    <div class="prog-leg"><div class="prog-leg-dot" style="background:#1DB87A;border:0.5px solid #0F6E56"></div>Complete</div>
+    <div class="prog-leg"><div class="prog-leg-dot" style="background:var(--bg3);border:2px solid #1DB87A"></div>Current week</div>
+    <div class="prog-leg"><div class="prog-leg-dot" style="background:var(--bg3);border:0.5px solid var(--border)"></div>Upcoming</div>
+  </div>`;
+
+  PROG_PHASES.forEach(ph=>{
+    const phDone=ph.weeks.filter(w=>wkChecked.includes(w)).length;
+    html+=`<div class="prog-phase-block">
+      <div class="prog-phase-head" style="color:${ph.color}">${ph.name}<span class="prog-phase-ct">${phDone}/${ph.weeks.length} wks</span></div>
+      <div class="prog-week-grid">`;
+    ph.weeks.forEach(wk=>{
+      const isDone=wkChecked.includes(wk);
+      const isCur=wk===curWk;
+      html+=`<div class="prog-wk ${isDone?'done':''} ${isCur&&!isDone?'cur':''}" onclick="toggleWk(${wk})">
+        <span class="prog-wk-chk">&#10003;</span>
+        <span class="prog-wk-num">Wk ${wk}</span>
+        <span class="prog-wk-date">${PROG_WEEK_STARTS[wk-1]}</span>
+      </div>`;
+    });
+    html+=`</div></div>`;
+  });
+
+  html+=`<div class="prog-reset"><button class="prog-reset-btn" onclick="resetWks()">Reset all weeks</button></div>`;
+  document.getElementById('progressContent').innerHTML=html;
+}
+
+// ----- INIT -----
+renderProgressContent();
+renderPhaseNav(); renderPhaseInfo(); renderScheduleDays(); renderScheduleContent();
+renderLiftPhaseNav(); renderLiftDayTabs(); renderLiftContent();
+renderExploDays(); renderExploContent();
+renderCardioContent();
+renderStretchDays(); renderStretchContent();
+renderAnkleContent();
+renderShoulderDays(); renderShoulderContent();
+renderHipContent();
+renderLandmineContent();
+</script>
+</body>
+</html>
