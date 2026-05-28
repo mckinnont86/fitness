@@ -403,9 +403,9 @@ const LIFT_C={
     ]},
     {label:'Unilateral block',rows:[
       {n:'Pistol squat or skater squat',badge:'Unilateral',bc:'b-amber',rep:'uni',uni:true},
+      {n:'Cossack squat',badge:'Unilateral',bc:'b-amber',rep:'uni',uni:true},
       {n:'Dumbbell split press (kneeling)',badge:'Unilateral',bc:'b-amber',rep:'uni',uni:true},
       {n:'Single-arm cable row',badge:'Unilateral',bc:'b-amber',rep:'uni',uni:true},
-      {n:'Lateral lunge (dumbbell)',badge:'Unilateral',bc:'b-amber',rep:'uni',uni:true},
     ]},
     {label:'Landmine block',rows:[
       {n:'Landmine 180 (rotational slam)',badge:'Core',bc:'b-gray',rep:'acc',uni:true},
@@ -1285,6 +1285,10 @@ const EX_CUES = {
   'Single-arm cable row (hip-height)': 'Cable at hip height, single arm. Hinge slightly, row to hip. Full stretch and squeeze.',
   'Single-arm cable row':              'Cable at low-mid height, single arm. Pull to hip, squeeze lat, control the return.',
   'Lateral lunge (dumbbell)':          'Step wide to the side, sit into the hip of the working leg. Keep the other leg straight.',
+  'Cossack squat':                      'Stand wide, shift weight to one side and descend into a deep lateral squat. The other leg stays straight with the foot flat or toes up. Pause at the bottom, drive back up through the heel. The deepest lateral hip exercise in the program — builds the range you need for stance transitions and getting under opponents.',
+  'Cossack squat (bodyweight)':         'Stand wide, shift weight to one side and descend as deep as possible. Keep the heel down on the working leg. The straight leg can have toes up or flat. Pause at the bottom for 1–2 seconds before driving back up. Master the bodyweight version fully before adding load.',
+  'Cossack squat (weighted — goblet or landmine)': 'Hold a dumbbell at chest (goblet) or use the landmine for counterbalance. The load helps you sit deeper by acting as a counterweight. Only add load once bodyweight is fully controlled through the whole range.',
+  'Cossack squat hold — passive stretch': 'Sit at the bottom of one side of the cossack squat and hold. Let gravity pull you deeper with each exhale. One of the best adductor and lateral hip stretches available — the position directly mirrors the bottom of a wrestling level change.',
   'Dumbbell incline press':            'Set bench 30-45 degrees. Control the descent, drive up, squeeze pecs at top.',
   'Face pull (cable)':                 'Cable at face height, rope attachment, pull to forehead with elbows flared. External rotation emphasis.',
   'Face pull (cable — thumbs-up grip)':'Thumbs up on rope. Pull to forehead, elbows high and wide. Rear delt and rotator cuff.',
@@ -1511,6 +1515,7 @@ const HIP_SECTIONS=[
   {label:'Hip mobility',rows:[
     {n:'Hip 90/90 active rotation',d:'2×10 / side',badge:'Mobility',bc:'b-amber'},
     {n:'Hip CARs (controlled articular rotations)',d:'2×5 / side — slow full circle',badge:'Mobility',bc:'b-amber'},
+    {n:'Cossack squat hold — passive stretch',d:'2×45s / side — sit at the bottom of the cossack, breathe into the stretch',badge:'Mobility',bc:'b-amber'},
     {n:'Deep squat hip rock',d:'2×10 — rock side to side at bottom of squat',badge:'Mobility',bc:'b-amber'},
     {n:'Lateral lunge hip stretch — hold at bottom',d:'3×45s / side',badge:'Mobility',bc:'b-amber'},
     {n:'Pigeon pose — active breathing',d:'3×60s / side',badge:'Mobility',bc:'b-amber'},
@@ -1538,6 +1543,8 @@ const HIP_SECTIONS=[
     {n:'Physio ball seated hip CARs',d:'2×5 / side — seated, lift and rotate',badge:'Mobility',bc:'b-amber'},
   ]},
   {label:'Wrestling-specific hip loading',rows:[
+    {n:'Cossack squat (bodyweight)',d:'3×8 / side — slow descent, pause at bottom',badge:'Wrestling',bc:'b-orange'},
+    {n:'Cossack squat (weighted — goblet or landmine)',d:'3×6 / side — add load when bodyweight is fully controlled',badge:'Progression',bc:'b-blue'},
     {n:'Banded level change — resisted shot',d:'4×6 / side',badge:'Wrestling',bc:'b-orange'},
     {n:'Banded hip shift — lateral stance load',d:'3×10 / side',badge:'Wrestling',bc:'b-orange'},
     {n:'Single-leg hip hinge to drive (hip pop)',d:'3×8 / side',badge:'Power',bc:'b-orange'},
